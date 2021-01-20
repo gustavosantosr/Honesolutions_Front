@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-
+import { DomSanitizer } from '@angular/platform-browser';
+import { AlertConfig } from 'ngx-bootstrap/alert';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Color, BaseChartDirective } from 'ng2-charts';
 @Component({
   templateUrl: 'dashboard.component.html'
 })
+// tslint:disable-next-line:no-unused-expression
+
 export class DashboardComponent implements OnInit {
 
-  radioModel: string = 'Month';
-
+  @ViewChild('baseChart', { static: true }) chart: BaseChartDirective;
+  radioModel = 'Month';
+  public i = 0;
+  public suma = 0;
+  constructor() { }
   // lineChart1
-  public lineChart1Data: Array<any> = [
-    {
-      data: [65, 59, 84, 84, 51, 55, 40],
-      label: 'Series A'
-    }
-  ];
-  public lineChart1Labels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  public obj2: Array<number> = [];
+  public lineChart1Data: Array<any> = [{ data: [1, 2, 3, 4, 2], label: 'Series A' }];
+  public lineChart1Labels: Array<any> = ['January', 'February', 'March', 'April', 'May'];
   public lineChart1Options: any = {
     tooltips: {
       enabled: false,
@@ -98,8 +102,8 @@ export class DashboardComponent implements OnInit {
         display: false,
         ticks: {
           display: false,
-          min: 1 - 5,
-          max: 34 + 5,
+          min: 20000 - 5,
+          max: 400000 + 5,
         }
       }],
     },
@@ -177,7 +181,7 @@ export class DashboardComponent implements OnInit {
   // barChart1
   public barChart1Data: Array<any> = [
     {
-      data: [78, 81, 80, 45, 34, 12, 40, 78, 81, 80, 45, 34, 12, 40, 12, 40],
+      data: [78.4, 81.3, 80.9, 45, 34, 12, 40, 78, 81, 80, 45, 34, 12, 40, 12, 40],
       label: 'Series A'
     }
   ];
@@ -242,7 +246,7 @@ export class DashboardComponent implements OnInit {
       mode: 'index',
       position: 'nearest',
       callbacks: {
-        labelColor: function(tooltipItem, chart) {
+        labelColor: function (tooltipItem, chart) {
           return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor };
         }
       }
@@ -255,7 +259,7 @@ export class DashboardComponent implements OnInit {
           drawOnChartArea: false,
         },
         ticks: {
-          callback: function(value: any) {
+          callback: function (value: any) {
             return value.charAt(0);
           }
         }
@@ -379,6 +383,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
+    // this.lineChart1Data.push(this.getGrafica());
+
     // generate random values for mainChart
     for (let i = 0; i <= this.mainChartElements; i++) {
       this.mainChartData1.push(this.random(50, 200));
@@ -386,4 +394,22 @@ export class DashboardComponent implements OnInit {
       this.mainChartData3.push(65);
     }
   }
+
+
+
+
+  public pushOne() {
+    this.lineChart2Data.forEach((x, i) => {
+      const num = this.generateNumber(i);
+      const data: number[] = x.data as number[];
+      data.push(num);
+    });
+    this.lineChart2Labels.push(`Label ${this.lineChart2Labels.length}`);
+    alert(JSON.stringify(this.lineChart2Data));
+  }
+  private generateNumber(i: number) {
+    return Math.floor((Math.random() * (i < 2 ? 100 : 1000)) + 1);
+  }
+  // tslint:disable-next-line:use-lifecycle-interface
+
 }

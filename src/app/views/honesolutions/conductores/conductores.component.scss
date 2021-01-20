@@ -1,0 +1,16 @@
+.foto{
+    width: 80px;
+    border-radius: 80px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.mat-cell {
+    padding: 0;
+    border-bottom-style: none !important;
+    vertical-align: middle;
+}
+.mat-row:nth-child(even){
+    background-color: aliceblue;
+    margin-top: 5px;
+
+  }

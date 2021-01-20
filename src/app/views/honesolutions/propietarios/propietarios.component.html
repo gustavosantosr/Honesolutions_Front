@@ -1,0 +1,183 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Agregar Propietario</h5>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="propietarioForm">
+            <div class="input-group mb-3" hidden>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Id Propietario:</span>
+                </div>
+                <input type="number" class="form-control" formControlName="IDPropietario" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Documento Tipo</label>
+                </div>
+                <select formControlName="IDDocumentoTipo" class="custom-select">
+
+                    <option *ngFor="let documentotipo of documentotipos" [ngValue]="documentotipo.IDDocumentoTipo">
+                        {{documentotipo.DocumentoTipo }}
+                    </option>
+                </select>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Documento:</span>
+                </div>
+                <input type="number" class="form-control" formControlName="Documento" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nombres:</span>
+                </div>
+                <input type="text" class="form-control" formControlName="Nombres" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos:</span>
+                </div>
+                <input type="text" class="form-control" formControlName="Apellidos" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Email:</span>
+                </div>
+                <input type="text" class="form-control" formControlName="Email" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Celular:</span>
+                </div>
+                <input type="number" class="form-control" formControlName="Celular" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Fecha Nacimiento:</span>
+                </div>
+                <input type="date" class="form-control" formControlName="FechaNacimiento" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+            <div class="input-group mb-3" hidden>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Fecha Nacimiento:</span>
+                </div>
+                <input type="date" class="form-control" formControlName="FechaNacimiento" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+            <div class="input-group mb-3" hidden>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">URLFoto:</span>
+                </div>
+                <input type="text" class="form-control" formControlName="URLFoto" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!propietarioForm.valid"
+                (click)="save()">Agregar</button>
+            <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!propietarioForm.valid"
+                (click)="update()">Actualizar</button>
+            <button class="btn btn-outline-primary" (click)="cancel()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-header">
+
+        <h5 class="card-title">Listado de Propietarios </h5>
+
+    </div>
+    <div class="card-body">
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+            </div>
+            <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control"
+                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+
+
+        <div class="table-responsive-sm">
+
+            <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" 
+            <ng-container matColumnDef="editar">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar. </th>
+                <td mat-cell *matCellDef="let Propietario" id="ee" (click)="onRowClicked(Propietario)"> <img src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+              </ng-container>-->
+                <!-- Position Column 
+      <ng-container matColumnDef="salida">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Salida. </th>
+        <td mat-cell *matCellDef="let Propietario" id="ee" (click)="salida(Propietario)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
+      </ng-container>-->
+                <ng-container matColumnDef="editar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar. </th>
+                    <td mat-cell *matCellDef="let Propietario" id="ee" (click)="onRowClicked(Propietario)"> <img
+                            src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+                </ng-container>
+                <ng-container matColumnDef="foto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Foto</th>
+                    <td mat-cell *matCellDef="let Propietario" id="ee"> <img class="foto" src="{{Propietario.URLFoto}}"
+                            ng-click="select(1)"> </td>
+                </ng-container>
+                <!-- Position Column -->
+                <ng-container matColumnDef="IDPropietario">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.IDPropietario}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="DocumentoTipo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Documento </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.DocumentoTipo.DocumentoTipo}}</td>
+                </ng-container>
+                <ng-container matColumnDef="IDDocumentoTipo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> IDDocumentoTipo </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.DocumentoTipo.IDDocumentoTipo}}</td>
+                </ng-container>
+                <ng-container matColumnDef="Documento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.Documento}}</td>
+                </ng-container>
+                <ng-container matColumnDef="Nombres">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.Nombres}}</td>
+                </ng-container>
+                <ng-container matColumnDef="Apellidos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.Apellidos}}</td>
+                </ng-container>
+                <ng-container matColumnDef="Email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.Email}}</td>
+                </ng-container>
+                <ng-container matColumnDef="Celular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Celular </th>
+                    <td mat-cell *matCellDef="let Propietario"><a href="https://wa.me/57{{Propietario.Celular}}"
+                            class="whatsapp" target="_blank"> <i
+                                class="fa fa-whatsapp whatsapp-icon"></i></a>{{Propietario.Celular}}</td>
+                </ng-container>
+                <ng-container matColumnDef="FechaNacimiento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Nacimiento </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.FechaNacimiento}}</td>
+                </ng-container>
+                <ng-container matColumnDef="FechaRegistro">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Registro </th>
+                    <td mat-cell *matCellDef="let Propietario">{{Propietario.FechaRegistro}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let Propietario; columns: displayedColumns;"></tr>
+            </table>
+
+        </div>
+    </div>
+</div>

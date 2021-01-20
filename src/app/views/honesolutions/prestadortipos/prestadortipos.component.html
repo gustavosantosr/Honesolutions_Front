@@ -1,0 +1,96 @@
+<!--<div class="card">
+    <div class="card-header">
+      <h5 class="card-title">Agregar Tipo de Prestador</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="prestadortipoForm">
+        <div class="input-group mb-3" hidden>
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Id PrestadorTipo:</span>
+          </div>
+          <input type="text" class="form-control" formControlName="IDPrestadorTipo" value="" aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Tipo de Prestador:</span>
+          </div>
+          <input type="text" class="form-control" formControlName="PrestadorTipo" value="" aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group mb-3">
+          <label class="switch switch-label switch-pill switch-info">
+            <input type="checkbox" class="switch-input" formControlName="Activo" [checked]="true">
+            <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+          </label>
+      </div>
+  
+        <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!prestadortipoForm.valid"
+          (click)="save()">Agregar</button>
+        <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!prestadortipoForm.valid"
+          (click)="update()">Actualizar</button>
+        <button class="btn btn-outline-primary" (click)="cancel()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+  -->
+  
+  
+  <div class="card">
+    <div class="card-header">
+  
+      <h5 class="card-title">Listado de Tipos de Prestadores </h5>
+  
+    </div>
+    <div class="card-body">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+        </div>
+        <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+      </div>
+  
+  
+  
+      <div class="table-responsive-sm">
+  
+        <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  
+          <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" 
+            <ng-container matColumnDef="editar">
+                <th mat-header-cell *matHeaderCellDef> Editar. </th>
+                <td mat-cell *matCellDef="let PrestadorTipo" id="ee" (click)="onRowClicked(PrestadorTipo)"> <img src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+              </ng-container>-->
+          <!-- Position Column 
+      <ng-container matColumnDef="salida">
+        <th mat-header-cell *matHeaderCellDef> Salida. </th>
+        <td mat-cell *matCellDef="let PrestadorTipo" id="ee" (click)="salida(PrestadorTipo)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
+      </ng-container>-->
+         <!---  <ng-container matColumnDef="editar">
+            <th mat-header-cell *matHeaderCellDef> Editar. </th>
+            <td mat-cell *matCellDef="let PrestadorTipo" id="ee" (click)="onRowClicked(PrestadorTipo)"> <img
+                src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+          </ng-container>
+          Position Column -->
+          <ng-container matColumnDef="IDPrestadorTipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let PrestadorTipo"[innerHTML]="PrestadorTipo.IDPrestadorTipo | highlightSearch: filterText"></td>
+          </ng-container>
+          <ng-container matColumnDef="PrestadorTipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Prestador </th>
+            <td mat-cell *matCellDef="let PrestadorTipo"[innerHTML]="PrestadorTipo.PrestadorTipo | highlightSearch: filterText"></td>
+          </ng-container>
+         
+          
+          
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let PrestadorTipo; columns: displayedColumns;"></tr>
+        </table>
+  
+      </div>
+    </div>
+  </div>
+
+

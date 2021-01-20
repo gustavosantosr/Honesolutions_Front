@@ -1,0 +1,146 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">Agregar ServicioEspecialidad Especialidades</h5>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="servicioespecialidadForm">
+      <div class="input-group mb-3" hidden>
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Id ServicioEspecialidad:</span>
+        </div>
+        <input type="number" class="form-control" formControlName="IDServicioEspecialidad" value="" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+      </div>
+
+      <div class="input-group mb-3" formGroupName="Especialidad">
+        <div class="input-group mb-3" formGroupName="EspecialidadTipo">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">EspecialidadTipo</label>
+          </div>
+          <select formControlName="IDEspecialidadTipo" class="custom-select">
+
+            <option *ngFor="let especialidadtipo of especialidadtipos" [ngValue]="especialidadtipo.IDEspecialidadTipo">
+              {{especialidadtipo.EspecialidadTipo}}
+            </option>
+          </select>
+
+
+
+
+
+
+        </div>
+
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Especialidad</label>
+        </div>
+        <select formControlName="IDEspecialidad" class="custom-select">
+
+          <option *ngFor="let especialidad of especialidades" [ngValue]="especialidad.IDEspecialidad">
+            {{especialidad.Especialidad}}
+          </option>
+        </select>
+      </div>
+
+
+
+
+
+      <div class="input-group mb-3" formGroupName="Servicio">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Servicio</label>
+        </div>
+        <select formControlName="IDServicio" class="custom-select">
+
+          <option *ngFor="let servicio of servicios" [ngValue]="servicio.IDServicio">
+            {{servicio.Resolucion3495}} - {{servicio.Descripcion3495}}
+          </option>
+        </select>
+        
+      </div>
+      <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!servicioespecialidadForm.valid"
+        (click)="save()">Add</button>
+      <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!servicioespecialidadForm.valid"
+        (click)="update()">Actualizar</button>
+      <button class="btn btn-outline-primary" (click)="cancel()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+
+
+<div class="card">
+  <div class="card-header">
+
+    <h5 class="card-title">Lista ServicioEspecialidadEspecialidades </h5>
+
+  </div>
+  <div class="card-body">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+      </div>
+      <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control" aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm">
+    </div>
+
+
+
+    <div class="table-responsive-sm">
+
+      <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" 
+            <ng-container matColumnDef="editar">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
+                <td mat-cell *matCellDef="let ServicioEspecialidad" id="ee" (click)="onRowClicked(ServicioEspecialidad)"> <img src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+              </ng-container>-->
+        <!-- Position Column 
+      <ng-container matColumnDef="salida">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Salida. </th>
+        <td mat-cell *matCellDef="let ServicioEspecialidad" id="ee" (click)="salida(ServicioEspecialidad)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
+      </ng-container>-->
+        <ng-container matColumnDef="editar">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad" id="ee" (click)="onRowClicked(ServicioEspecialidad)"> <img
+              src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+        </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="IDServicioEspecialidad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad">{{ServicioEspecialidad.IDServicioEspecialidad}}</td>
+        </ng-container>
+        <ng-container matColumnDef="IDEspecialidad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad">{{ServicioEspecialidad.IDServicioEspecialidad}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Especialidad">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Especialidad </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad"
+            [innerHTML]="ServicioEspecialidad.Especialidad.Especialidad | highlightSearch: filterText"></td>
+        </ng-container>
+        <ng-container matColumnDef="Descripcion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Especialidad </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad"
+            [innerHTML]="ServicioEspecialidad.Descripcion | highlightSearch: filterText"></td>
+        </ng-container>
+        <ng-container matColumnDef="Resolucion3495">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Resolucion3495 </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad"
+            [innerHTML]="ServicioEspecialidad.Servicio.Resolucion3495 | highlightSearch: filterText"></td>
+        </ng-container>
+        <ng-container matColumnDef="Descripcion3495">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripcion 3495 </th>
+          <td mat-cell *matCellDef="let ServicioEspecialidad"
+            [innerHTML]="ServicioEspecialidad.Servicio.Descripcion3495 | highlightSearch: filterText"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let ServicioEspecialidad; columns: displayedColumns;"></tr>
+      </table>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Trayectos</h5>
+    </div>
+    <div class="card-body">
+        <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom">
+            <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true"
+                (dragEnd)="markerDragEnd($event)"></agm-marker>
+            <agm-marker [latitude]="latitude2" [longitude]="longitude2" [markerDraggable]="true"
+                (dragEnd)="markerDragEnd2($event)"></agm-marker>
+        </agm-map>
+        <form [formGroup]="programaForm">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Dirección Origen:</span>
+                    </div>
+                    <input type="text" class="form-control" name="DireccionOrigen" id="DireccionOrigen"
+                        formControlName="DireccionOrigen" value="" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                    <span class="input-group-prepend">
+                        <button type="button" (click)="gerCordsOrigen()" class="btn btn-primary"><i
+                                class="fa fa-search"></i>
+                            Busqueda</button>
+                    </span>
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Dirección Destino:</span>
+                    </div>
+                    <input type="text" class="form-control" name="DireccionDestino" id="DireccionDestino"
+                        formControlName="DireccionDestino" value="" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                    <span class="input-group-prepend">
+                        <button type="button" (click)="gerCordsDestino()" class="btn btn-primary"><i
+                                class="fa fa-search"></i>
+                            Busqueda</button>
+                    </span>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Latitud Origen:</span>
+                    </div>
+                    <input type="number" class="form-control" name="LatitudOrigen" id="LatitudOrigen"
+                        formControlName="LatitudOrigen" value="{{latitude}}" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                        
+
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Latitud Destino:</span>
+                    </div>
+                    <input type="number" class="form-control" name="LatitudDestino" id="LatitudDestino"
+                        formControlName="LatitudDestino" value="{{latitude2}}" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Longitud Origen:</span>
+                    </div>
+                    <input type="number" class="form-control" name="LongOrigen" id="LongOrigen"
+                        formControlName="LongOrigen" value="{{longitude}}" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Longitud Destino:</span>
+                    </div>
+                    <input type="number" class="form-control" name="LongDestino" id="LongDestino"
+                        formControlName="LongDestino" value="{{longitude2}}" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">fecha inicio</label>
+                    </div>
+                    <input type="date" class="form-control" name="FechaInicio" id="FechaInicio" formControlName="FechaInicio" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <input type="time" class="form-control" name="HoraInicio" id="HoraInicio" formControlName="HoraInicio" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Fecha Fin</label>
+                    </div>
+                    <input type="date" class="form-control" name="FechaFin" id="FechaFin" formControlName="FechaFin" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <input type="time" class="form-control" name="HoraFin" id="HoraFin" formControlName="HoraFin" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Vehiculo</label>
+                    </div>
+                    <select formControlName="IDVehiculo" class="custom-select">
+
+                        <option *ngFor="let vehiculo of vehiculos" [ngValue]="vehiculo.IDVehiculo">
+                            {{ vehiculo.Placa}}
+                        </option>
+                    </select>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Conductor</label>
+                    </div>
+                    <select formControlName="IDConductor" class="custom-select">
+
+                        <option *ngFor="let conductor of conductores" [ngValue]="conductor.IDConductor">
+                            {{ conductor.Documento}} -- {{ conductor.Apellidos}} -- {{conductor.Nombres}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Tipo Servicio</label>
+                    </div>
+                    <select formControlName="IDServicioTipo" class="custom-select">
+
+                        <option *ngFor="let serviciotipo of serviciotipos" [ngValue]="serviciotipo.IDServicioTipo">
+                            {{serviciotipo.ServicioTipo}}
+                        </option>
+                    </select>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Valor</label>
+                    </div>
+                    <input type="number" class="form-control" name="Valor" id="Valor" formControlName="Valor" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01"># Pasajeros</label>
+                    </div>
+                    <input type="number" class="form-control" name="CantidadPasajeros" id="CantidadPasajeros"
+                        formControlName="CantidadPasajeros" value="" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <div class="input-group mb-3">
+                   <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Cliente</label>
+                    </div>
+                    <select formControlName="IDCliente" class="custom-select">
+
+                        <option *ngFor="let cliente of clientes" [ngValue]="cliente.IDCliente">
+                            {{ cliente.Documento}} -- {{ cliente.RazonSocial}}
+                        </option>
+                    </select>
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Nombre Pasajero</label>
+                    </div>
+                    <input type="text" class="form-control" name="NombrePasajero" id="NombrePasajero" formControlName="NombrePasajero" value=""
+                        aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Celular Pasajero</label>
+                    </div>
+                    <input type="number" class="form-control" name="CelularPasajero" id="CelularPasajero"
+                        formControlName="CelularPasajero" value="" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+                </div>
+                <button  class="btn btn-outline-primary" [disabled]="!programaForm.valid"
+          (click)="save()">Agregar</button>
+                <button class="btn btn-outline-primary" (click)="gerCordsDestino()">Cancelar</button>
+            </div>
+        </form>
+
+        
+          
+
+
+        <!---
+    <h5>Address: {{address}}</h5>
+    <div>Latitude: {{latitude}}</div>
+    <div>Longitude: {{longitude}}</div>
+
+    <h5>Address: {{address2}}</h5>
+    <div>Latitude: {{latitude2}}</div>
+    <div>Longitude: {{longitude2}}</div>
+-->
+    </div>
+</div>

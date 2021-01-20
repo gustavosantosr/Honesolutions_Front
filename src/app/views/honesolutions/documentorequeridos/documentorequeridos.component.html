@@ -1,0 +1,117 @@
+<div class="card">
+  <div class="card-header">
+
+    <h5 class="card-title">Listado de Documentos Requeridos </h5>
+
+  </div>
+  <div class="card-body">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+      </div>
+      <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control" aria-label="Small"
+        aria-describedby="inputGroup-sizing-sm">
+    </div>
+
+
+
+    <div class="table-responsive-sm">
+
+      <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" 
+            <ng-container matColumnDef="editar">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar. </th>
+                <td mat-cell *matCellDef="let DocumentoRequerido" id="ee" (click)="onRowClicked(DocumentoRequerido)"> <img src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+              </ng-container>-->
+        <!-- Position Column 
+      <ng-container matColumnDef="salida">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Salida. </th>
+        <td mat-cell *matCellDef="let DocumentoRequerido" id="ee" (click)="salida(DocumentoRequerido)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
+      </ng-container>-->
+        <ng-container matColumnDef="editar">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargar. </th>
+          <td mat-cell *matCellDef="let DocumentoRequerido" id="ee" data-toggle="modal"
+            (click)="maillingInvoiceModal.show(); onRowClicked(DocumentoRequerido);"> <img
+              src="../../../../assets/procesos_icon.png" ng-click="select(1)"> </td>
+        </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="IDDocumentoRequerido">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let DocumentoRequerido"
+            [innerHTML]="DocumentoRequerido.IDDocumentoRequerido | highlightSearch: filterText"></td>
+        </ng-container>
+        <ng-container matColumnDef="DocumentoRequerido">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+          <td mat-cell *matCellDef="let DocumentoRequerido"
+            [innerHTML]="DocumentoRequerido.DocumentoTipo.DocumentoTipo | highlightSearch: filterText"></td>
+        </ng-container>
+
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let DocumentoRequerido; columns: displayedColumns;"></tr>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div bsModal #maillingInvoiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Cargue de documentos</h4>
+        <button type="button" class="close" (click)="maillingInvoiceModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div>
+
+          <form [formGroup]="uploadForm">
+            <div class="form-group" *ngFor="let elemento of elementos;">
+
+              <label for="nickname">{{elemento.label}}</label>
+              <input type="{{elemento.type}}" class="form-control" value="{{elemento.value}}"
+                formControlName="{{elemento.key}}" id="codigo" placeholder="{{elemento.label}}" name="codigo"
+                style="width:200px;">
+            </div>
+            <div class="form-group" hidden>
+              <label>CampoRequerido</label>
+              <input type="text" class="form-control" formControlName="CampoRequerido" placeholder="campo Requerido"
+                style="width:200px;">
+            </div>
+            <div class="form-group" hidden>
+              <label>CampoRequerido</label>
+              <input type="text" class="form-control" formControlName="IDDocumento" placeholder="campo Requerido"
+                style="width:200px;">
+            </div>
+            <div class="form-group">
+              <label>Archivo</label>
+              <div>
+                <input type="file" formControlName="file" (change)="onFileSelect($event)" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Fecha Vencimiento</label>
+              <div>
+                <input type="date" formControlName="FechaVencimiento"/>
+              </div>
+            </div>
+            <button (click)="onSubmit()" class="btn btn-default">Registrar</button>
+
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="maillingInvoiceModal.hide()">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
