@@ -4,6 +4,7 @@ import { Departamento } from '../../../model/departamento';
 import { DepartamentoService } from '../../../services/departamento.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu } from '@angular/material';
+import { Validators } from '@angular/forms';
 
 
 export class Group {
@@ -31,9 +32,28 @@ export class DepartamentosComponent implements OnInit {
 
   departamentoForm = new FormGroup({
     IDDepartamento: new FormControl(''),
-    Departamento: new FormControl(''),
+    Departamento: new FormControl('', [Validators.required]),
     Activo: new FormControl(true)
   });
+
+ /* inicioForm = new FormGroup({   
+    numeroDocu: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
+      Validators.min(0), Validators.pattern('^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ ]+$')]),
+
+    confirmNroDoc: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
+        Validators.min(0), Validators.pattern('^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ ]+$')]),
+
+    idTipoDocumento: new FormControl('', [Validators.required]),
+
+    numeroSnp: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
+      Validators.min(0), Validators.pattern('^(AC|VG|EK)\\d*$')])   
+
+});*/
+
+get Departamento() {   
+ return this.departamentoForm.get('Departamento');
+}
+
 
 
   _alldata: any[];

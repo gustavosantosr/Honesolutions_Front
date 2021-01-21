@@ -18,7 +18,12 @@
         </div>
         <input type="text" class="form-control" formControlName="Departamento" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
+          <br>          
       </div>
+      <span class="validator"
+                *ngIf="departamentoForm?.invalid ">
+                  El campo Departamento es obligatorio
+          </span>
       <div class="input-group mb-3">
         <label class="switch switch-label switch-pill switch-info">
           <input type="checkbox" class="switch-input" formControlName="Activo" [checked]="true">
