@@ -15,7 +15,7 @@
       <div class="input-group mb-3">
         <div class="input-group-prepend" formGroupName="IdentificacionTipo">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">IdentificacionTipo</label>
+            <label class="input-group-text" for="inputGroupSelect01">Tipo Identificación: <span class="validator"> *</span></label>
           </div>
           <select formControlName="IDIdentificacionTipo" class="custom-select">
 
@@ -40,12 +40,12 @@
           </div>
         </div>
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">Identificacion:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Identificación:<span class="validator"> *</span></span>
         </div>
-        <input type="text" class="form-control" formControlName="Identificacion" value="" aria-label="Small"
+        <input type="number" class="form-control" formControlName="Identificacion" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">DV:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">DV:<span class="validator"> *</span></span>
         </div>
         <input type="number" class="form-control" formControlName="DV" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
@@ -59,26 +59,29 @@
 
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">Nombres ó Razon Social:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Nombres ó Razon Social:<span class="validator"> *</span></span>
         </div>
         <input type="text" class="form-control" formControlName="Nombres" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">Email:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Email:<span class="validator"> *</span></span>
         </div>
         <input type="text" class="form-control" formControlName="Email" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
-
-        
+          <span class="validator"
+          *ngIf="(Email.dirty || Email.touched) 
+                      && Email.errors?.pattern">
+             El correo electrónico no tiene un formato válido
+          </span>
 
       </div>
 
       <div class="input-group mb-3">
 
         <div class="input-group-prepend">
-          <label class="input-group-text" for="inputGroupSelect01">Departamento </label>
+          <label class="input-group-text" for="inputGroupSelect01">Departamento: <span class="validator"> *</span> </label>
           <select formControlName="IDDepartamento" class="custom-select" (change)="changeDepartamento()">
 
             <option *ngFor="let departamento of departamentos" [ngValue]="departamento.IDDepartamento">
@@ -92,7 +95,7 @@
 
         <div class="input-group-prepend" formGroupName="Ciudad">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Ciudad</label>
+            <label class="input-group-text" for="inputGroupSelect01">Ciudad: <span class="validator"> *</span></label>
           </div>
           <select formControlName="IDCiudad" class="custom-select">
 
@@ -116,32 +119,51 @@
           </div>
         </div>
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">Direccion:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:<span class="validator"> *</span></span>
         </div>
         <input type="text" class="form-control" formControlName="Direccion" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
       <div class="input-group mb-2">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Telefono:</span>
+            <span class="input-group-text" id="inputGroup-sizing-sm">Teléfono:<span class="validator"> *</span></span>
           </div>
           <input type="number" class="form-control" formControlName="Telefono" value="" aria-label="Small"
             aria-describedby="inputGroup-sizing-sm">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Celular:</span>
+            <span class="input-group-text" id="inputGroup-sizing-sm">Celular:<span class="validator"> *</span></span>
           </div>
           <input type="number" class="form-control" formControlName="Celular" value="" aria-label="Small"
             aria-describedby="inputGroup-sizing-sm">
         
       </div>
+      
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Celular 2:</span>
+        </div>
+        <input type="number" class="form-control" formControlName="CelularOtro" value="" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Email 2:</span>
+        </div>
+        <input type="text" class="form-control" formControlName="EmailOtro" value="" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+          <span class="validator"
+          *ngIf="EmailOtro.errors?.pattern">
+             El correo electrónico no tiene un formato válido
+          </span>
+      
+    </div>
+
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">ActividadRut:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Actividad Rut:</span>
         </div>
         <input type="text" class="form-control" formControlName="ActividadRut" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-sm">ActividadCodigo:</span>
+          <span class="input-group-text" id="inputGroup-sizing-sm">Código Actividad:</span>
         </div>
         <input type="text" class="form-control" formControlName="ActividadCodigo" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
@@ -151,6 +173,8 @@
         <input type="text" class="form-control" formControlName="Banco" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
+
+      <!-- Se deja en comentario la cuentaTipo
 
       <div class="input-group mb-3" formGroupName="CuentaTipo">
         <div class="input-group-prepend">
@@ -177,6 +201,7 @@
           </label>
         </div>
       </div>
+        -->
 
       <div class="input-group mb-3">
       <label class="switch switch-label switch-pill switch-info">
@@ -184,11 +209,18 @@
         <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
       </label>
     </div>
+    
+    <span class="validator"
+          *ngIf="clienteForm?.invalid ">
+          Los campos con asterisco (*) son obligatorios
+    </span>
+    <div style="margin-top:1%;">
       <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!clienteForm.valid"
         (click)="save()">Agregar</button>
       <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!clienteForm.valid"
         (click)="update()">Actualizar</button>
       <button class="btn btn-outline-primary" (click)="cancel()">Cancelar</button>
+    </div>
     </form>
   </div>
 </div>
@@ -234,9 +266,13 @@
         <td mat-cell *matCellDef="let Cliente" id="ee" (click)="salida(Cliente)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
       </ng-container>-->
         <ng-container matColumnDef="editar">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar. </th>
-          <td mat-cell *matCellDef="let Cliente" id="ee" (click)="onRowClicked(Cliente); scroll(target);"> <img
-              src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Editar </th>
+          <td mat-cell *matCellDef="let Cliente" id="ee" (click)="onRowClicked(Cliente); scroll(target);"> 
+            <img src="../../../../assets/editar.png" 
+                 style="cursor: pointer;" 
+                 tooltip="Permite editar el cliente"
+                 placement="top"
+                 ng-click="select(1)"> </td>
         </ng-container>
         <!-- Position Column -->
         <ng-container matColumnDef="IDCliente">
@@ -245,11 +281,11 @@
         </ng-container>
 
         <ng-container matColumnDef="IdentificacionTipo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Identificacion </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Identificación </th>
           <td mat-cell *matCellDef="let Cliente">{{Cliente.IdentificacionTipo.IdentificacionTipo}}</td>
         </ng-container>
         <ng-container matColumnDef="Identificacion">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificacion </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
           <td mat-cell *matCellDef="let Cliente">{{Cliente.Identificacion}}</td>
         </ng-container>
         <ng-container matColumnDef="Nombres">
@@ -270,7 +306,7 @@
               target="_blank"> <i class="fa fa-whatsapp whatsapp-icon"></i></a>{{Cliente.Celular}}</td>
         </ng-container>
         <ng-container matColumnDef="Direccion">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
           <td mat-cell *matCellDef="let Cliente">{{Cliente.Direccion}}</td>
         </ng-container>
         <ng-container matColumnDef="Activo">

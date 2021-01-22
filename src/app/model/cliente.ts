@@ -19,6 +19,8 @@ export class Cliente {
     Banco: string;
     CuentaTipo: CuentaTipo;
     Activo: boolean;
+    CelularOtro: number;
+    EmailOtro: string;
 
 
 

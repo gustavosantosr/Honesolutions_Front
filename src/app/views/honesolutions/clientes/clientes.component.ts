@@ -2,7 +2,7 @@ import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cliente } from '../../../model/cliente';
 import { ClienteService } from '../../../services/cliente.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu } from '@angular/material';
 import { IdentificacionTipo } from '../../../model/identificacionTipo';
 import { IdentificaciontipoService } from '../../../services/identificaciontipo.service';
@@ -39,24 +39,25 @@ export class ClientesComponent implements OnInit {
 
   clienteForm = new FormGroup({
     IDCliente: new FormControl(''),
-    IDDepartamento: new FormControl(''),
-    Nombres: new FormControl(''),
-    Email: new FormControl(''),
-    Direccion: new FormControl(''),
-    Telefono: new FormControl(''),
-    Celular: new FormControl(''),
+    IDDepartamento: new FormControl('', [Validators.required]),
+    Nombres: new FormControl('', [Validators.required]),
+    Email: new FormControl('', [Validators.required, 
+               Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')]),
+    Direccion: new FormControl('', [Validators.required]),
+    Telefono: new FormControl('', [Validators.required]),
+    Celular: new FormControl('', [Validators.required]),
     Ciudad: new FormGroup({ // make a nested group
-      IDCiudad: new FormControl(''),
+      IDCiudad: new FormControl('', [Validators.required]),
       Ciudad: new FormControl(''),
       Active: new FormControl(true)
     }),
     IdentificacionTipo: new FormGroup({ // make a nested group
-      IDIdentificacionTipo: new FormControl(''),
+      IDIdentificacionTipo: new FormControl('', [Validators.required]),
       IdentificacionTipo: new FormControl(''),
       Active: new FormControl(true)
     }),
-    Identificacion: new FormControl(''),
-    DV: new FormControl(''),
+    Identificacion: new FormControl('', [Validators.required]),
+    DV: new FormControl('', [Validators.required]),
     ActividadRut: new FormControl(''),
     ActividadCodigo: new FormControl(''),
     Banco: new FormControl(''),
@@ -65,8 +66,45 @@ export class ClientesComponent implements OnInit {
       CuentaTipo: new FormControl(''),
       Active: new FormControl(true)
     }),
-    Activo: new FormControl(true)
+    Activo: new FormControl(true),
+    CelularOtro: new FormControl(''),
+    EmailOtro: new FormControl('', [Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')])
   });
+
+  get IDIdentificacionTipo() {   
+    return this.clienteForm.get('IDIdentificacionTipo');
+    }
+  get Identificacion() {   
+  return this.clienteForm.get('Identificacion');
+  }
+  get DV() {   
+  return this.clienteForm.get('DV');
+  }
+  get Nombres() {   
+    return this.clienteForm.get('Nombres');
+  }
+  get Email() {   
+    return this.clienteForm.get('Email');
+  }
+  get IDDepartamento() {   
+    return this.clienteForm.get('IDDepartamento');
+  }
+  get IDCiudad() {   
+    return this.clienteForm.get('IDCiudad');
+  }
+  get Direccion() {   
+    return this.clienteForm.get('Direccion');
+  }
+  get Telefono() {   
+    return this.clienteForm.get('Telefono');
+  }
+  get Celular() {   
+    return this.clienteForm.get('Celular');
+  }
+  get EmailOtro() {   
+    return this.clienteForm.get('EmailOtro');
+  }
+
 
 
   _alldata: any[];
