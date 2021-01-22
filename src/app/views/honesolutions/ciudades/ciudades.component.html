@@ -7,7 +7,7 @@
         <form [formGroup]="ciudadForm">
             <div class="input-group mb-3" formGroupName="Departamento">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Departamento</label>
+                    <label class="input-group-text" for="inputGroupSelect01">Departamento:<span class="validator"> *</span></label>
                 </div>
                 <select formControlName="IDDepartamento" class="custom-select">
 
@@ -39,7 +39,7 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Ciudad:</span>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Ciudad:<span class="validator"> *</span></span>
                 </div>
                 <input type="text" class="form-control" formControlName="Ciudad" value="" aria-label="Small"
                     aria-describedby="inputGroup-sizing-sm">
@@ -47,7 +47,8 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Codigo:</span>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Código:<span class="validator"> *</span>
+                    </span>
                 </div>
                 <input type="number" class="form-control" formControlName="Codigo" value="" aria-label="Small"
                     aria-describedby="inputGroup-sizing-sm">
@@ -59,14 +60,20 @@
                     <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
                 </label>
             </div>
-
-
-
+            <span class="validator"
+                    *ngIf="Codigo.errors?.pattern">
+                El campo Código solo recibe numeros            
+            </span>
+            <span class="validator"
+            *ngIf="ciudadForm?.invalid ">
+               Los campos con asterisco (*) son obligatorios
+            </span>
+            <br>
             <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!ciudadForm.valid"
                 (click)="save()">Agregar</button>
             <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!ciudadForm.valid"
                 (click)="update()">Update</button>
-            <button class="btn btn-outline-primary" (click)="cancel()">Cancel</button>
+            <button class="btn btn-outline-primary" (click)="cancel()">Cancelar</button>
         </form>
     </div>
 </div>
@@ -114,9 +121,12 @@
         <td mat-cell *matCellDef="let Ciudad" id="ee" (click)="salida(Ciudad)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
       </ng-container>-->
                 <ng-container matColumnDef="editar">
-                    <th mat-header-cell *matHeaderCellDef> Edit </th>
-                    <td mat-cell *matCellDef="let Ciudad" id="ee" (click)="onRowClicked(Ciudad); scroll(target);"> <img
-                            src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+                    <th mat-header-cell *matHeaderCellDef> Editar </th>
+                    <td mat-cell *matCellDef="let Ciudad" id="ee" (click)="onRowClicked(Ciudad); scroll(target);"> 
+                        <img
+                            src="../../../../assets/editar.png" ng-click="select(1)" style="cursor: pointer;" 
+                            tooltip="Permite editar la ciudad"
+                            placement="top"> </td>
                 </ng-container>
                 <!-- Position Column -->
                 <ng-container matColumnDef="IDCiudad">

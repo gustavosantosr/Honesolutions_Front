@@ -61,6 +61,11 @@ import { ConfiglocalizacionesComponent } from './configlocalizaciones/configloca
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ConfigprestadoresComponent } from './configprestadores/configprestadores.component';
 
+// Tooltip Component
+import { TooltipsComponent } from '../base/tooltips.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+
 
 
 
@@ -85,6 +90,7 @@ import { ConfigprestadoresComponent } from './configprestadores/configprestadore
     MatIconModule,
     MatSnackBarModule,
     MatMenuModule,
+    TooltipModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDw7fcF8mx_xw-3v2jRnYwsYnkyMGdBKnA',
       libraries: ['places']
@@ -128,7 +134,8 @@ import { ConfigprestadoresComponent } from './configprestadores/configprestadore
     DynamicFormQuestionComponent,
     IdentificaciontiposComponent,
     ConfiglocalizacionesComponent,
-    ConfigprestadoresComponent
+    ConfigprestadoresComponent,
+    TooltipsComponent
 
   ],
   providers: [

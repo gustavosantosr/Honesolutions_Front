@@ -6,6 +6,7 @@ import { Departamento } from '../../../model/departamento';
 import { DepartamentoService } from '../../../services/departamento.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu } from '@angular/material';
+import { Validators } from '@angular/forms';
 
 export class Group {
   level = 0;
@@ -33,15 +34,23 @@ export class CiudadesComponent implements OnInit {
 
   ciudadForm = new FormGroup({
     IDCiudad: new FormControl(''),
-    Ciudad: new FormControl(''),
-    Codigo: new FormControl(''),
+    Ciudad: new FormControl('', [Validators.required]),
+    Codigo: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+')]),
     Activo: new FormControl(true),
     Departamento: new FormGroup({ // make a nested group
-      IDDepartamento: new FormControl(''),
+      IDDepartamento: new FormControl('', [Validators.required]),
       Departamento: new FormControl(''),
       Activo: new FormControl(true),
     }),
   });
+
+  get Ciudad() {   
+    return this.ciudadForm.get('Ciudad');
+   }
+
+  get Codigo() {   
+    return this.ciudadForm.get('Codigo');
+   }
 
 
   _alldata: any[];

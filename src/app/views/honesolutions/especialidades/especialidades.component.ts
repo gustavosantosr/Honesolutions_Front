@@ -8,6 +8,7 @@ import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatI
 import { EspecialidadTipo } from '../../../model/especialidadTipo';
 import { PrestadorTipo } from '../../../model/prestadorTipo';
 import { PrestadortipoService } from '../../../services/prestadortipo.service';
+import { Validators } from '@angular/forms';
 
 export class Group {
   level = 0;
@@ -35,13 +36,20 @@ export class EspecialidadesComponent implements OnInit {
 
   especialidadForm = new FormGroup({
     IDEspecialidad: new FormControl(''),
-    Especialidad: new FormControl(''),
+    Especialidad: new FormControl('', [Validators.required]),
     Activo: new FormControl(true),
     EspecialidadTipo: new FormGroup({ // make a nested group
-      IDEspecialidadTipo: new FormControl(''),
+      IDEspecialidadTipo: new FormControl('', [Validators.required]),
       EspecialidadTipo: new FormControl('')
     })
   });
+
+ get IDEspecialidadTipo() {   
+ return this.especialidadForm.get('IDEspecialidadTipo');
+}
+get Especialidad() {   
+  return this.especialidadForm.get('Especialidad');
+ }
 
 
   _alldata: any[];

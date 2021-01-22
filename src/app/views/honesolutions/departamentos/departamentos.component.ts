@@ -36,20 +36,7 @@ export class DepartamentosComponent implements OnInit {
     Activo: new FormControl(true)
   });
 
- /* inicioForm = new FormGroup({   
-    numeroDocu: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
-      Validators.min(0), Validators.pattern('^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ ]+$')]),
-
-    confirmNroDoc: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
-        Validators.min(0), Validators.pattern('^[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ ]+$')]),
-
-    idTipoDocumento: new FormControl('', [Validators.required]),
-
-    numeroSnp: new FormControl('', [Validators.required, Validators.max(99999999999999999999), 
-      Validators.min(0), Validators.pattern('^(AC|VG|EK)\\d*$')])   
-
-});*/
-
+ 
 get Departamento() {   
  return this.departamentoForm.get('Departamento');
 }

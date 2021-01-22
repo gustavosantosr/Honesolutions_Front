@@ -4,6 +4,7 @@ import { IdentificacionTipo } from '../../../model/identificacionTipo';
 import { IdentificaciontipoService } from '../../../services/identificaciontipo.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu } from '@angular/material';
+import { Validators } from '@angular/forms';
 
 
 export class Group {
@@ -31,9 +32,15 @@ export class IdentificaciontiposComponent implements OnInit {
 
   identificaciontipoForm = new FormGroup({
     IDIdentificacionTipo: new FormControl(''),
-    IdentificacionTipo: new FormControl(''),
+    IdentificacionTipo: new FormControl('',[Validators.required]),
     Activo: new FormControl('')
   });
+
+  get IdentificacionTipo() {   
+    return this.identificaciontipoForm.get('IdentificacionTipo');
+   }
+
+  
 
 
   _alldata: any[];
