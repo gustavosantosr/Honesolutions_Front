@@ -260,14 +260,19 @@ export class ClientesComponent implements OnInit {
 
     this.cliente = row;
     this.clienteForm.controls['IDCliente'].setValue(this.cliente.IDCliente);
-    this.clienteForm.controls['IDIdentificacionTipo'].setValue(this.cliente.IdentificacionTipo.IDIdentificacionTipo);
+    this.clienteForm.controls.IdentificacionTipo.controls['IDIdentificacionTipo'].setValue(this.cliente.IdentificacionTipo.IDIdentificacionTipo);
     this.clienteForm.controls['Identificacion'].setValue(this.cliente.Identificacion);
+    this.clienteForm.controls['DV'].setValue(this.cliente.DV);
     this.clienteForm.controls['Nombres'].setValue(this.cliente.Nombres);
     this.clienteForm.controls['Email'].setValue(this.cliente.Email);
+    this.clienteForm.controls.Ciudad.controls['IDCiudad'].setValue(this.cliente.Ciudad.IDCiudad);
     this.clienteForm.controls['Direccion'].setValue(this.cliente.Direccion);
+    this.clienteForm.controls['Telefono'].setValue(this.cliente.Telefono);
+    this.clienteForm.controls['Celular'].setValue(this.cliente.Celular);
     this.btn_add = false;
     this.btn_update = true;
   }
+ 
   goBack(): void {
 
   }
