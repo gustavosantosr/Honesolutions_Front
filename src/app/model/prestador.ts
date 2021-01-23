@@ -27,4 +27,6 @@ export class Prestador {
     Especialidad: Especialidad;
     Usuario: Usuario;
     Activo: boolean;
+    CelularOtro: number;
+    EmailOtro: string;
 }

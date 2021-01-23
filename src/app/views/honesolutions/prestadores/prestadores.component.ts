@@ -18,6 +18,7 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { Usuario } from '../../../model/usuario';
 import { PrestadorTipo } from '../../../model/prestadorTipo';
 import { PrestadortipoService } from '../../../services/prestadortipo.service';
+import { Validators } from '@angular/forms';
 
 export class Group {
   level = 0;
@@ -45,10 +46,10 @@ especialidades: Especialidad[];
 
   prestadorForm = new FormGroup({
     IDPrestador: new FormControl(''),
-    IDDepartamento: new FormControl(''),
-    ComiteFecha: new FormControl(''),
+    IDDepartamento: new FormControl('', [Validators.required]),
+    ComiteFecha: new FormControl('', [Validators.required]),
     Ciudad: new FormGroup({ // make a nested group
-      IDCiudad: new FormControl(''),
+      IDCiudad: new FormControl('', [Validators.required]),
       Ciudad: new FormControl(''),
       Active: new FormControl(true)
     }),
@@ -58,23 +59,24 @@ especialidades: Especialidad[];
       Activo: new FormControl(true)
     }),
     IdentificacionTipo: new FormGroup({ // make a nested group
-      IDIdentificacionTipo: new FormControl(''),
+      IDIdentificacionTipo: new FormControl('', [Validators.required]),
       IdentificacionTipo: new FormControl(''),
       Active: new FormControl(true)
     }),
-    Identificacion: new FormControl(''),
-    DV: new FormControl(''),
-    Nombre: new FormControl(''),
+    Identificacion: new FormControl('', [Validators.required]),
+    DV: new FormControl('', [Validators.required]),
+    Nombre: new FormControl('', [Validators.required]),
     ConsultorioDireccion: new FormControl(''),
     ConsultorioTelefono: new FormControl(''),
-    Celular: new FormControl(''),
-    Email: new FormControl(''),
+    Celular: new FormControl('', [Validators.required]),
+    Email: new FormControl('', [Validators.required,
+           Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')]),
     Servicios: new FormControl(''),
     Tarifas: new FormControl(''),
-    Expediente: new FormControl(''),
+    Expediente: new FormControl('', [Validators.required]),
     Direccion: new FormControl(''),
     PrestadorTipo: new FormGroup({ // make a nested group
-      IDPrestadorTipo: new FormControl(''),
+      IDPrestadorTipo: new FormControl('', [Validators.required]),
       PrestadorTipo: new FormControl(''),
       Activo: new FormControl(true)
     }),
@@ -84,14 +86,60 @@ especialidades: Especialidad[];
       Activo: new FormControl(true)
     }),
     Especialidad: new FormGroup({ // make a nested group
-      IDEspecialidad: new FormControl('')
+      IDEspecialidad: new FormControl('', [Validators.required])
     }),
     Usuario: new FormGroup({ // make a nested group
-      IDUsuario: new FormControl('')
+      IDUsuario: new FormControl('', [Validators.required])
     }),
     Activo: new FormControl(true),
-    Verificado: new FormControl(true)
+    Verificado: new FormControl(true),
+    CelularOtro: new FormControl(''),
+    EmailOtro: new FormControl('', [Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')])
   });
+
+  get IDIdentificacionTipo() {   
+    return this.prestadorForm.get('IDIdentificacionTipo');
+    }
+  get IDPrestadorTipo() {   
+    return this.prestadorForm.get('IDPrestadorTipo');
+    }
+  get IDEspecialidad() {   
+    return this.prestadorForm.get('IDEspecialidad');
+    }
+  get Expediente() {   
+    return this.prestadorForm.get('Expediente');
+    }
+  get IDUsuario() {   
+    return this.prestadorForm.get('IDUsuario');
+    } 
+  get Identificacion() {   
+    return this.prestadorForm.get('Identificacion');
+    }  
+  get DV() {   
+    return this.prestadorForm.get('DV');
+    }
+  get Nombre() {   
+    return this.prestadorForm.get('Nombre');
+    }
+  get ComiteFecha() {   
+    return this.prestadorForm.get('ComiteFecha');
+    } 
+  get IDDepartamento() {   
+    return this.prestadorForm.get('IDDepartamento');
+    }  
+  get IDCiudad() {   
+    return this.prestadorForm.get('IDCiudad');
+    }
+  get Celular() {   
+    return this.prestadorForm.get('Celular');
+    }
+  get Email() {   
+    return this.prestadorForm.get('Email');
+  }
+  get EmailOtro() {   
+    return this.prestadorForm.get('EmailOtro');
+  }
+    
 
 
   _alldata: any[];
