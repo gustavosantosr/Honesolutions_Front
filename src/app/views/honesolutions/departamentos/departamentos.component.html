@@ -108,11 +108,15 @@
         </ng-container>
         <ng-container matColumnDef="Activo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
-          <td mat-cell *matCellDef="let Departamento">
-            <label class="switch switch-label switch-pill switch-info">
+          <td mat-cell *matCellDef="let Departamento" >
+            <label *ngIf="Departamento.Activo">Activo</label>
+            <label *ngIf="!Departamento.Activo">Inactivo</label>
+            
+           <!-- <label class="switch switch-label switch-pill switch-info">
               <input type="checkbox" class="switch-input" [checked]="Departamento.Activo">
               <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
             </label>
+          -->
           </td>
         </ng-container>
 

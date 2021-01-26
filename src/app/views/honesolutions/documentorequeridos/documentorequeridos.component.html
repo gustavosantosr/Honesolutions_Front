@@ -2,8 +2,10 @@
   <div class="card-header">
 
     <h5 class="card-title">Listado de Documentos Requeridos </h5>
-
+    <button class="btn btn-outline-primary" 
+            (click)="volver()">Volver</button>
   </div>
+  
   <div class="card-body">
     <div class="input-group input-group-sm mb-3">
       <div class="input-group-prepend">
@@ -33,8 +35,12 @@
         <ng-container matColumnDef="editar">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargar. </th>
           <td mat-cell *matCellDef="let DocumentoRequerido" id="ee" data-toggle="modal"
-            (click)="maillingInvoiceModal.show(); onRowClicked(DocumentoRequerido);"> <img
-              src="../../../../assets/procesos_icon.png" ng-click="select(1)"> </td>
+            (click)="maillingInvoiceModal.show(); onRowClicked(DocumentoRequerido);"> 
+            <img
+              src="../../../../assets/procesos_icon.png" ng-click="select(1)"
+              style="cursor: pointer;" 
+                 tooltip="Cargar Documento"
+                 placement="top"> </td>
         </ng-container>
         <!-- Position Column -->
         <ng-container matColumnDef="IDDocumentoRequerido">

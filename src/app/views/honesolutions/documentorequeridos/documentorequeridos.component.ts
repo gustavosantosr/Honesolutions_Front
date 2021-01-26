@@ -341,6 +341,10 @@ export class DocumentoRequeridosComponent implements OnInit {
     return item.level;
   }
 
+  volver(): void {
+    this.router.navigate(['/honesolutions/prestadores/']);
+  }
+
 }
 
 
