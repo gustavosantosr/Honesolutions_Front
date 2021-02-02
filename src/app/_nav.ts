@@ -61,6 +61,26 @@ export const navItems: NavData[] = [
             name: 'Conf. Prestadores',
             url: '/honesolutions/configprestadores',
             icon: 'icon-puzzle'
+          },
+          {
+            name: 'Seguridad',
+            icon: 'icon-puzzle',
+            children: [{
+              name: 'Roles',
+              url: '/honesolutions/roles',
+              icon: 'icon-puzzle'
+            },
+            {
+              name: 'Permisos',
+              url: '/honesolutions/permisos',
+              icon: 'icon-puzzle'
+            },
+            {
+              name: 'Usuarios',
+              url: '/honesolutions/usuarios',
+              icon: 'icon-puzzle'
+            }
+            ]
           }]
       },
   {

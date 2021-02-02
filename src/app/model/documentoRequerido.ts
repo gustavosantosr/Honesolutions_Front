@@ -9,4 +9,5 @@ export class DocumentoRequerido {
     CampoRequeridoValor: string;
     PrestadorTipo: PrestadorTipo;
     DocumentoTipo: DocumentoTipo;
+    URLSigned: string;
 }

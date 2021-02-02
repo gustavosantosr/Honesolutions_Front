@@ -34,10 +34,10 @@
       </ng-container>-->
         <ng-container matColumnDef="editar">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Cargar. </th>
-          <td mat-cell *matCellDef="let DocumentoRequerido" id="ee" data-toggle="modal"
-            (click)="maillingInvoiceModal.show(); onRowClicked(DocumentoRequerido);"> 
+          <td mat-cell *matCellDef="let DocumentoRequerido" id="ee"
+            (click)="maillingInvoiceModal.show(); onRowClicked(DocumentoRequerido);" height="300px"> 
             <img
-              src="../../../../assets/procesos_icon.png" ng-click="select(1)"
+              src="../../../../assets/pdf.png" ng-click="select(1)" 
               style="cursor: pointer;" 
                  tooltip="Cargar Documento"
                  placement="top"> </td>
@@ -52,6 +52,15 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
           <td mat-cell *matCellDef="let DocumentoRequerido"
             [innerHTML]="DocumentoRequerido.DocumentoTipo.DocumentoTipo | highlightSearch: filterText"></td>
+        </ng-container>
+        <ng-container matColumnDef="URLSigned">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Preview </th>
+          <td mat-cell *matCellDef="let DocumentoRequerido">
+            <a [href]="cleanURL(DocumentoRequerido.URLSigned)" target="_blank">
+            <embed [src]="cleanURL(DocumentoRequerido.URLSigned)" width="250px" height="300px" />
+           </a>
+           
+           </td>
         </ng-container>
 
 
@@ -84,7 +93,7 @@
             <div class="form-group" *ngFor="let elemento of elementos;">
 
               <label for="nickname">{{elemento.label}}</label>
-              <input type="{{elemento.type}}" class="form-control" value="{{elemento.value}}"
+              <input type="{{elemento.type}}" class="form-control" value="{{elemento.value}}" (change)="onChangeDate($event)"
                 formControlName="{{elemento.key}}" id="codigo" placeholder="{{elemento.label}}" name="codigo"
                 style="width:200px;">
             </div>
@@ -104,13 +113,13 @@
                 <input type="file" formControlName="file" (change)="onFileSelect($event)" />
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" *ngIf="vencimiento_show">
               <label>Fecha Vencimiento</label>
               <div>
-                <input type="date" formControlName="FechaVencimiento"/>
+                <input type="text" formControlName="FechaVencimiento"/>
               </div>
             </div>
-            <button (click)="onSubmit()" class="btn btn-default">Registrar</button>
+            <button  (click)="onSubmit()" class="btn btn-outline-primary">Registrar</button>
 
           </form>
         </div>

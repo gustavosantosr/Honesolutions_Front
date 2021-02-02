@@ -10,7 +10,9 @@ import { QuestionBase } from './question-base';
 import { HttpClient } from '@angular/common/http';
 import { DropdownQuestion } from './question-dropdown';
 import { TextboxQuestion } from './question-textbox';
-
+import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { AlertComponent } from 'ngx-bootstrap/alert';
 export class Group {
   level = 0;
   parent: Group;
@@ -19,7 +21,18 @@ export class Group {
   get visible(): boolean {
     return !this.parent || (this.parent.visible && this.parent.expanded);
   }
+
 }
+
+
+@Pipe({ name: 'safe' })
+export class SafePipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) { }
+  transform(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+}
+
 @Component({
   selector: 'app-documentorequeridos',
   templateUrl: './documentorequeridos.component.html',
@@ -30,11 +43,14 @@ export class DocumentoRequeridosComponent implements OnInit {
   questions$: Observable<QuestionBase<any>[]>;
   public total = 0;
   public btn_update = false;
+  public vencimiento_show = true;
   public btn_add = true;
+  public IDDocumento = 0;
+  public IDDocumentoTipo = 0;
   columns: any[];
   displayedColumns: string[];
   elementos: any[];
-  SERVER_URL = 'http://localhost:8080/updatedocumento';
+  SERVER_URL = 'https://honesolutions.ue.r.appspot.com/updatedocumento';
   @Input() documentorequerido: DocumentoRequerido;
 
   documentorequeridoForm = new FormGroup({
@@ -54,6 +70,7 @@ export class DocumentoRequeridosComponent implements OnInit {
   barcodeValue;
   filterText = '';
 
+
   AfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -69,7 +86,8 @@ export class DocumentoRequeridosComponent implements OnInit {
   }
 
   constructor(private formBuilder: FormBuilder, private documentorequeridoService: DocumentorequeridoService
-    , private router: Router, service: QuestionService, private httpClient: HttpClient, private route: ActivatedRoute) {
+    , private router: Router, service: QuestionService, private httpClient: HttpClient, private route: ActivatedRoute,
+    private sanitizer: DomSanitizer) {
     this.questions$ = service.getQuestions();
     this.columns = [
       {
@@ -77,6 +95,9 @@ export class DocumentoRequeridosComponent implements OnInit {
       },
       {
         field: 'DocumentoRequerido'
+      },
+      {
+        field: 'URLSigned'
       }];
     this.displayedColumns = this.columns.map(column => column.field);
 
@@ -87,7 +108,7 @@ export class DocumentoRequeridosComponent implements OnInit {
     this.id_prestador = +this.route.snapshot.paramMap.get('id');
     this.dataSource = new MatTableDataSource<DocumentoRequerido | Group>(this.getDocumentorequeridos(this.id_prestador))
     this.getDocumentorequeridos(this.id_prestador);
-    this.uploadForm = this.formBuilder.group({ file: [''], CampoRequerido: [''] });
+    this.uploadForm = this.formBuilder.group({ file: [''], CampoRequerido: [''], FechaVencimiento: [''] });
   }
   getDocumentorequerido(): void {
     this.documentorequeridoService.getDocumentoRequerido(this.documentorequeridoForm.get('IDDocumentoRequerido').value)
@@ -119,6 +140,11 @@ export class DocumentoRequeridosComponent implements OnInit {
   }
   onRowClicked(row) {
     console.log('Row clicked: ', row);
+
+    this.IDDocumento = row.IDDocumento;
+    this.IDDocumentoTipo = row.DocumentoTipo.IDDocumentoTipo;
+
+    this.uploadForm.controls['FechaVencimiento'].setValue(row.FechaVencimiento);
     // alert(row.CampoRequeridoValor);
     this.elementos = JSON.parse(row.CampoRequeridoValor);
     // alert(this.elementos[0]['key']);
@@ -137,48 +163,417 @@ export class DocumentoRequeridosComponent implements OnInit {
       this.questions$ = of(questions.sort((a, b) => a.order - b.order));
     }*/
 
+    alert(this.IDDocumentoTipo);
+    this.vencimiento_show = true;
+    if (this.IDDocumentoTipo == 27 || this.IDDocumentoTipo == 29 || this.IDDocumentoTipo == 36) {
+      this.onChangeNotVencDate();
+      this.vencimiento_show = false;
+    }
+    if (this.IDDocumentoTipo == 41) {
+      this.onConductaDate();
+      this.vencimiento_show = true;
+
+    }
+    if (this.IDDocumentoTipo == 30) {
+      this.vencimiento_show = true;
+
+    }
+    if (this.IDDocumentoTipo == 31) {
+      this.onCamaraDate();
+      this.vencimiento_show = true;
+
+    }
+    if (this.IDDocumentoTipo == 34 || this.IDDocumentoTipo == 35) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 37 || this.IDDocumentoTipo == 38 || this.IDDocumentoTipo == 39) {
+      this.onParaFDate();
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 40 || this.IDDocumentoTipo == 13) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 15) {
+      this.onOtrosiDate();
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 8) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 9) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 10 || this.IDDocumentoTipo == 11) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 16) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 23) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 24 || this.IDDocumentoTipo == 25) {
+      this.vencimiento_show = true;
+    }
+
+  }
+  onChangeDate(value: number) {
+    if (this.IDDocumentoTipo == 1) {
+      this.onChangeContratoDate();
+    }
+    if (this.IDDocumentoTipo == 2) {
+      this.onChangeFormularioAdsDate();
+    }
+    if (this.IDDocumentoTipo == 30) {
+      this.onChangeVacunaDate();
+    }
+    if (this.IDDocumentoTipo == 31) {
+      this.onCamaraDate();
+    }
+    if (this.IDDocumentoTipo == 34 || this.IDDocumentoTipo == 35) {
+      this.onDocDate();
+    }
+    if (this.IDDocumentoTipo == 40) {
+      this.onRethusDate();
+    }
+    if (this.IDDocumentoTipo == 13) {
+      this.onNivelDate();
+    }
+    if (this.IDDocumentoTipo == 7) {
+      this.onFichaDate();
+    }
+    if (this.IDDocumentoTipo == 10 || this.IDDocumentoTipo == 11) {
+      this.onDueDate();
+    }
+    if (this.IDDocumentoTipo == 16) {
+      this.onPoliticaDate();
+    }
+    if (this.IDDocumentoTipo == 23) {
+      this.onHepatitisDate();
+    }
+    if (this.IDDocumentoTipo == 24 || this.IDDocumentoTipo == 25) {
+      this.onAnualDate();
+    }
+
+  }
+  cleanURL(oldURL): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(oldURL);
+  }
+  onAnualDate() {
+
+
+    let date = new Date();
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate());
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear() + 1;
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onPoliticaDate() {
+
+    let tt = this.uploadForm.controls['fecharecepcion'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 365);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onHepatitisDate() {
+
+    let tt = this.uploadForm.controls['fechavacuna'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate());
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear() + 3;
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onDueDate() {
+
+    let tt = this.uploadForm.controls['fecharealizacion'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 1095);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onFichaDate() {
+
+    let tt = this.uploadForm.controls['fechainiciovigencia'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 365);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onOtrosiDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = new Date()
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+
+    let dd = 2;
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear() + 1;
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onNivelDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechafirma'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 365);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onRethusDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechaconsulta'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 365);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
   }
 
+  onDocDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechaentrega'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 1825);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onChangeContratoDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechafirma'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 1825);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onChangeFormularioAdsDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechadiligenciamiento'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 1825);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onChangeVacunaDate() {
+
+    //alert(this.uploadForm.controls['fechafirma'].value);
+    let tt = this.uploadForm.controls['fechavacuna'].value;
+    let date = new Date(tt);
+    let newdate = new Date(date);
+    //newdate.setDate(newdate.getDate() + 3);
+    //date.setDate( date.getDate() + 1825 );
+    newdate.setDate(newdate.getDate() + 365);
+
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    // alert(someFormattedDate);
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onConductaDate() {
+
+
+    let tt = new Date()
+    let newdate = new Date(tt);
+    newdate.setDate(newdate.getDate() + 180);
+    let dd = newdate.getDate();
+    let mm = newdate.getMonth() + 1;
+    let y = newdate.getFullYear();
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onParaFDate() {
+
+
+    let tt = new Date()
+    let newdate = new Date(tt);
+    let dd = newdate.getDate();
+    let mm = 4;
+    let y = newdate.getFullYear() + 1;
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onCamaraDate() {
+
+
+    let tt = new Date()
+    let newdate = new Date(tt);
+    newdate.setDate(newdate.getDate() + 180);
+    let dd = newdate.getDate();
+    let mm = 4;
+    let y = newdate.getFullYear() + 1;
+
+    let someFormattedDate = y + '-' + mm + '-' + dd;
+    //document.getElementById('follow_Date').value = someFormattedDate;
+    this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
+  }
+  onChangeNotVencDate() {
+    this.uploadForm.controls['FechaVencimiento'].setValue('0000-00-00');
+  }
   onSubmit() {
     const formData = new FormData();
 
     let respuesta = [];
     for (let k = 0; k < this.elementos.length; k++) {
       respuesta.push({
+        label: this.elementos[k].label,
         key: this.elementos[k].key,
         value: this.uploadForm.get(this.elementos[k].key).value,
         type: this.elementos[k].type,
         required: this.elementos[k].required,
-        order: this.elementos[k].order
+        order: this.elementos[k].order,
+        event: this.elementos[k].event
       });
     }
     //alert(this.uploadForm.get('lastname').value);
-   alert(JSON.stringify(respuesta));
-   //alert("Se realizo el cargue de información");
+    // alert(JSON.stringify(respuesta));
+    //alert("Se realizo el cargue de información");
     this.uploadForm.controls['CampoRequerido'].setValue(JSON.stringify(respuesta));
     //formData.append('file', this.uploadForm.get('profile').value);
 
     // const formData = new FormData();
     formData.append('media', this.uploadForm.get('file').value);
     var metadata = {
-      'IDDocumento': 5012,
+      'IDDocumento': this.IDDocumento,
       'Nombre': 'documento',
       'FechaRegistro': '2020-03-03',
       'CampoRequeridoValor': JSON.stringify(respuesta),
       'Prestador': {
-        'IDPrestador': 861
+        'IDPrestador': this.id_prestador
       },
       'DocumentoTipo': {
-        'IDDocumentoTipo': 1
+        'IDDocumentoTipo': this.IDDocumentoTipo
       },
       'Activo': true,
-      'Validado': true
+      'Validado': true,
+      'FechaVencimiento': this.uploadForm.controls['FechaVencimiento'].value
     };
     formData.append('metadata', JSON.stringify(metadata));
     this.httpClient.post<any>(this.SERVER_URL, formData).subscribe(
       (res) => console.log(res),
-      (err) => console.log(err)
+      (err) => console.log(err),
+      () => this.ResolveUpload()
     );
+  }
+  ResolveUpload() {
+    this.getDocumentorequeridos(this.id_prestador);
+    alert(' se cargo el documento correctamente');
   }
   setdata(row) {
     const questions: QuestionBase<string>[] = row.DocumentoTipo.CampoRequerido;
@@ -227,7 +622,7 @@ export class DocumentoRequeridosComponent implements OnInit {
 
 
   }
-  
+
   groupBy(event, column) {
     event.stopPropagation();
     this.checkGroupByColumn(column.field, true);
