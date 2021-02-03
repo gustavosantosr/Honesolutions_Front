@@ -21,15 +21,28 @@ export class PrestadorService {
     private http: HttpClient,
     private messageService: MessageService) { }
   url = environment.base_Url1;
+  gestor: String = '';
 
   /** GET prestadores from the server */
   getPrestadores(): Observable<Prestador[]> {
+    this.gestor = 'No gestor';
     return this.http.get<Prestador[]>(this.url + '/getprestador')
       .pipe(
         tap(_ => this.log('fetched prestadores')),
         catchError(this.handleError('getPrestadores', []))
       );
   }
+
+   /** GET prestadoresGestor from the server */
+   getPrestadoresGestor(idGestor: number): Observable<Prestador[]> {
+     this.gestor = 'gestor';
+    return this.http.get<Prestador[]>(this.url + '/getprestadorbyidgestor?IDGestor=' + idGestor + '')
+      .pipe(
+        tap(_ => this.log('fetched prestadores para gestor')),
+        catchError(this.handleError('getPrestadoresGestor', []))
+      );
+  }
+
 
   getPrestadoresFilter(term: String): Observable<Prestador[]> {
     // tslint:disable-next-line:max-line-length

@@ -37,7 +37,7 @@ export const navItems2: NavData[] = [
   },
   {
     name: 'Prestadores',
-    url: '/honesolutions/prestadores',
+    url: '/honesolutions/prestadoresgestor',
     icon: 'icon-puzzle'
   }
 ];

@@ -1,0 +1,133 @@
+
+<div #target></div>
+
+  <div class="card">
+    <div class="card-header">
+  
+      <h5 class="card-title">Listado de Prestadores </h5>
+  
+    </div>
+    <div class="card-body">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+        </div>
+        <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control" aria-label="Small"
+          aria-describedby="inputGroup-sizing-sm">
+      </div>
+  
+  
+  
+      <div class="table-responsive-sm">
+  
+        <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  
+          <!-- Position Column -->
+          <ng-container matColumnDef="IDPrestador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let Prestador">{{Prestador.IDPrestador}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="IdentificacionTipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                style="text-align: center;"> Tipo Identificación </th>
+            <td mat-cell *matCellDef="let Prestador"
+                style="text-align: center;">
+                {{Prestador.IdentificacionTipo.IdentificacionTipo}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="Identificacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Identificación </th>
+            <td mat-cell *matCellDef="let Prestador">{{Prestador.Identificacion}}</td>
+          </ng-container>
+          <ng-container matColumnDef="Nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre o Razón Social </th>
+            <td mat-cell *matCellDef="let Prestador">{{Prestador.Nombre}}</td>
+          </ng-container>
+          <ng-container matColumnDef="Email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                class="text-center"> Email </th>
+            <td mat-cell *matCellDef="let Prestador">{{Prestador.Email}}</td>
+          </ng-container>
+          <ng-container matColumnDef="TelefonoContacto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                style="text-align: center;"> Celular </th>
+            <td mat-cell *matCellDef="let Prestador"
+                style="text-align: center;">
+                <a href="https://wa.me/57{{Prestador.Celular}}" class="whatsapp"
+                target="_blank"> <i class="fa fa-whatsapp whatsapp-icon"></i>
+                </a>{{Prestador.Celular}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="TotalDocs">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                style="text-align: center;"> Total Docs  </th>
+            <td mat-cell *matCellDef="let Prestador" 
+                style="text-align: center;">{{Prestador.TotalDocs}}</td>
+          </ng-container>
+          <ng-container matColumnDef="PendienteDocs">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header 
+                style="text-align: center;"> Docs Pendientes </th>
+            <td mat-cell *matCellDef="let Prestador"
+                style="text-align: center;">{{Prestador.PendienteDocs}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="docs">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Documentos </th>
+            <td mat-cell *matCellDef="let Prestador" 
+                style="text-align: center;" id="ee" (click)="docRequeridos(Prestador)"> 
+              <img 
+                src="../../../../assets/pdf.png" ng-click="select(1)" 
+                style="cursor: pointer;" 
+                 tooltip="Ir a Listado de Documentos"
+                 placement="top"> </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let Prestador; columns: displayedColumns;"></tr>
+        </table>
+  
+      </div>
+      <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+  <div bsModal #maillingInvoiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cargue de documentos</h4>
+                <button type="button" class="close" (click)="maillingInvoiceModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+              <!DOCTYPE html>
+              <html lang="en">
+              
+              <head>
+                  <meta charset="UTF-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+                  <title>Document</title>
+              </head>
+              
+              <body>
+                  <form enctype="multipart/form-data" action="http://localhost:8080/bulkloadprestador" method="post">
+                      <input type="file" name="myFile" />
+                      <br>
+                      <input type="submit" value="upload" />
+                  </form>
+              </body>
+              
+              </html>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="maillingInvoiceModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

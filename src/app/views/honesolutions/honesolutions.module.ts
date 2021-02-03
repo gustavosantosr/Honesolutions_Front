@@ -64,6 +64,7 @@ import { ConfigprestadoresComponent } from './configprestadores/configprestadore
 // Tooltip Component
 import { TooltipsComponent } from '../base/tooltips.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgestor.component';
 
 
 
@@ -135,7 +136,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     IdentificaciontiposComponent,
     ConfiglocalizacionesComponent,
     ConfigprestadoresComponent,
-    TooltipsComponent
+    TooltipsComponent,
+    PrestadoresgestorComponent
 
   ],
   providers: [

@@ -32,6 +32,7 @@ import { DynamicFormComponent } from './documentorequeridos/dynamic-form.compone
 import { IdentificaciontiposComponent } from './identificaciontipos/identificaciontipos.component';
 import { ConfiglocalizacionesComponent } from './configlocalizaciones/configlocalizaciones.component';
 import { ConfigprestadoresComponent } from './configprestadores/configprestadores.component';
+import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgestor.component';
 
 
 
@@ -70,7 +71,8 @@ const routes: Routes = [
   { path: 'piezas', component: PiezasComponent },
   { path: 'informes', component: InformesComponent },
   { path: 'configlocalizaciones', component: ConfiglocalizacionesComponent },
-  { path: 'configprestadores', component: ConfigprestadoresComponent }
+  { path: 'configprestadores', component: ConfigprestadoresComponent },
+  { path: 'prestadoresgestor', component: PrestadoresgestorComponent}
 ];
 
 @NgModule({

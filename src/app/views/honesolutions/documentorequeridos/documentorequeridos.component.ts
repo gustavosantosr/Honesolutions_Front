@@ -13,6 +13,7 @@ import { TextboxQuestion } from './question-textbox';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { PrestadorService } from '../../../services/prestador.service';
 export class Group {
   level = 0;
   parent: Group;
@@ -69,6 +70,7 @@ export class DocumentoRequeridosComponent implements OnInit {
   groupByColumns: string[] = [];
   barcodeValue;
   filterText = '';
+  isGestor = false;
 
 
   AfterViewInit() {
@@ -87,7 +89,7 @@ export class DocumentoRequeridosComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private documentorequeridoService: DocumentorequeridoService
     , private router: Router, service: QuestionService, private httpClient: HttpClient, private route: ActivatedRoute,
-    private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer, private prestadorService: PrestadorService) {
     this.questions$ = service.getQuestions();
     this.columns = [
       {
@@ -109,6 +111,13 @@ export class DocumentoRequeridosComponent implements OnInit {
     this.dataSource = new MatTableDataSource<DocumentoRequerido | Group>(this.getDocumentorequeridos(this.id_prestador))
     this.getDocumentorequeridos(this.id_prestador);
     this.uploadForm = this.formBuilder.group({ file: [''], CampoRequerido: [''], FechaVencimiento: [''] });
+    if (this.prestadorService.gestor != null
+      && this.prestadorService.gestor !== undefined
+      && this.prestadorService.gestor === 'gestor') {
+        this.isGestor = true;
+    } else {
+      this.isGestor = false;
+    }
   }
   getDocumentorequerido(): void {
     this.documentorequeridoService.getDocumentoRequerido(this.documentorequeridoForm.get('IDDocumentoRequerido').value)
@@ -737,7 +746,11 @@ export class DocumentoRequeridosComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/honesolutions/prestadores/']);
+    if (this.isGestor === true) {
+    this.router.navigate(['/honesolutions/prestadoresgestor/']);
+    } else {
+      this.router.navigate(['/honesolutions/prestadores/']);
+    }
   }
 
 }

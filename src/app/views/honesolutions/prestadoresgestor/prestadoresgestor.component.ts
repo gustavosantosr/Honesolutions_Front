@@ -1,0 +1,110 @@
+import { Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
+import { Prestador } from '../../../model/prestador';
+import { AuthService } from '../../../services/auth.service';
+import { PrestadorService } from '../../../services/prestador.service';
+
+
+export class Group {
+  level = 0;
+  parent: Group;
+  expanded = true;
+  totalCounts = 0;
+  get visible(): boolean {
+    return !this.parent || (this.parent.visible && this.parent.expanded);
+  }
+}
+
+@Component({
+  selector: 'app-prestadoresgestor',
+  templateUrl: './prestadoresgestor.component.html',
+  styleUrls: ['./prestadoresgestor.component.scss']
+})
+
+
+export class PrestadoresgestorComponent implements OnInit {
+  [x: string]: any;
+
+  dataSource = new MatTableDataSource<Prestador | Group>(this.getPrestadores());
+  prestadores: Prestador[];
+  @Input() prestador: Prestador;
+  displayedColumns: string[];
+  tipoUsuario: number;
+ 
+  constructor(private prestadorService: PrestadorService,
+              private router: Router,
+              private Auth: AuthService) {
+
+    this.columns = [
+      {
+        field: 'IDPrestador'
+      },
+      {
+        field: 'IdentificacionTipo'
+      },
+      {
+        field: 'Identificacion'
+      },
+      {
+        field: 'Nombre'
+      },
+      {
+        field: 'Email'
+      },
+      {
+        field: 'TelefonoContacto'
+      },
+      {
+        field: 'TotalDocs'
+      },
+      {
+        field: 'PendienteDocs'
+      },
+      {
+        field: 'docs'
+      }
+
+    ];
+    this.displayedColumns = this.columns.map(column => column.field);
+  }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+    }
+
+  ngOnInit() {
+    this.tipoUsuario = this.Auth.getType;
+    this.getPrestadores();
+  }
+
+  AfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  }
+  onRowClicked(row) {
+    console.log('Row clicked: ', row);
+
+    this.prestador = row;
+  }
+
+  getPrestadores() {
+  // debugger
+    this.prestadorService.getPrestadoresGestor(this.tipoUsuario)
+      .subscribe(prestadoresTemp => this.dataSource.data = prestadoresTemp);
+
+    return this.prestadores;
+  }
+
+  docRequeridos(row): void {
+    this.router.navigate(['honesolutions/documentorequeridos/' + row.IDPrestador]);
+  }
+
+}
