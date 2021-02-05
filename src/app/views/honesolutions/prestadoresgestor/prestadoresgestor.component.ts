@@ -32,7 +32,7 @@ export class PrestadoresgestorComponent implements OnInit {
   @Input() prestador: Prestador;
   displayedColumns: string[];
   tipoUsuario: number;
- 
+  columns: any[];
   constructor(private prestadorService: PrestadorService,
               private router: Router,
               private Auth: AuthService) {

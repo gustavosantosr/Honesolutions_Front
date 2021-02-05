@@ -33,7 +33,7 @@ export class IdentificaciontiposComponent implements OnInit {
   identificaciontipoForm = new FormGroup({
     IDIdentificacionTipo: new FormControl(''),
     IdentificacionTipo: new FormControl('',[Validators.required]),
-    Activo: new FormControl('')
+    Activo: new FormControl(true)
   });
 
   get IdentificacionTipo() {   

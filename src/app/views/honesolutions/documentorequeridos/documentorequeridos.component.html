@@ -57,7 +57,8 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Preview </th>
           <td mat-cell *matCellDef="let DocumentoRequerido">
             <a [href]="cleanURL(DocumentoRequerido.URLSigned)" target="_blank">
-            <embed [src]="cleanURL(DocumentoRequerido.URLSigned)" width="250px" height="300px" />
+           <!-- <embed [src]="cleanURL(DocumentoRequerido.URLSigned)" width="250px" height="300px" />-->
+           Enlace Documento
            </a>
            
            </td>
@@ -116,7 +117,7 @@
             <div class="form-group" *ngIf="vencimiento_show">
               <label>Fecha Vencimiento</label>
               <div>
-                <input type="text" formControlName="FechaVencimiento"/>
+                <input type="text" formControlName="FechaVencimiento" disabled/>
               </div>
             </div>
             <button  (click)="onSubmit()" class="btn btn-outline-primary">Registrar</button>

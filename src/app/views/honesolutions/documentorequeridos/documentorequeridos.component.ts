@@ -51,7 +51,7 @@ export class DocumentoRequeridosComponent implements OnInit {
   columns: any[];
   displayedColumns: string[];
   elementos: any[];
-  SERVER_URL = 'https://honesolutions.ue.r.appspot.com/updatedocumento';
+  SERVER_URL = 'http://localhost:8080/updatedocumento';
   @Input() documentorequerido: DocumentoRequerido;
 
   documentorequeridoForm = new FormGroup({
@@ -114,7 +114,7 @@ export class DocumentoRequeridosComponent implements OnInit {
     if (this.prestadorService.gestor != null
       && this.prestadorService.gestor !== undefined
       && this.prestadorService.gestor === 'gestor') {
-        this.isGestor = true;
+      this.isGestor = true;
     } else {
       this.isGestor = false;
     }
@@ -172,8 +172,8 @@ export class DocumentoRequeridosComponent implements OnInit {
       this.questions$ = of(questions.sort((a, b) => a.order - b.order));
     }*/
 
-    alert(this.IDDocumentoTipo);
-    this.vencimiento_show = true;
+    //alert(this.IDDocumentoTipo);
+    this.vencimiento_show = false;
     if (this.IDDocumentoTipo == 27 || this.IDDocumentoTipo == 29 || this.IDDocumentoTipo == 36) {
       this.onChangeNotVencDate();
       this.vencimiento_show = false;
@@ -266,7 +266,8 @@ export class DocumentoRequeridosComponent implements OnInit {
 
   }
   cleanURL(oldURL): SafeUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(oldURL);
+    const url = this.sanitizer.bypassSecurityTrustResourceUrl(oldURL);
+    return url;
   }
   onAnualDate() {
 
@@ -747,7 +748,7 @@ export class DocumentoRequeridosComponent implements OnInit {
 
   volver(): void {
     if (this.isGestor === true) {
-    this.router.navigate(['/honesolutions/prestadoresgestor/']);
+      this.router.navigate(['/honesolutions/prestadoresgestor/']);
     } else {
       this.router.navigate(['/honesolutions/prestadores/']);
     }
