@@ -18,7 +18,7 @@
             <label class="input-group-text" for="inputGroupSelect01">Tipo Identificación: <span class="validator"> *</span></label>
           </div>
           <select formControlName="IDIdentificacionTipo" class="custom-select">
-
+            <option selected value="">Seleccione...</option>
             <option *ngFor="let identificaciontipo of identificaciontipos"
               [ngValue]="identificaciontipo.IDIdentificacionTipo">
               {{identificaciontipo.IdentificacionTipo}}
@@ -50,6 +50,22 @@
         <input type="number" class="form-control" formControlName="DV" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
+      <span class="validator"
+          *ngIf="(clienteForm.get('IdentificacionTipo').get('IDIdentificacionTipo')?.dirty || 
+          clienteForm.get('IdentificacionTipo').get('IDIdentificacionTipo')?.touched) 
+          && clienteForm.get('IdentificacionTipo').get('IDIdentificacionTipo')?.invalid">
+          Tipo Identificación es Requerido.
+    </span>
+    <span class="validator"
+          *ngIf="(Identificacion?.dirty || Identificacion?.touched) 
+          && Identificacion?.invalid">
+          Número Identificación es Requerido, o tiene un formato inválido.
+    </span>
+    <span class="validator"
+          *ngIf="(DV?.dirty || DV?.touched) 
+          && DV?.invalid ">
+          El campo DV es requerido, o tiene un formato inválido.
+    </span>
 
 
 
@@ -64,6 +80,11 @@
         <input type="text" class="form-control" formControlName="Nombres" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
+      <span class="validator"
+          *ngIf="(Nombres?.dirty || Nombres?.touched) 
+          && Nombres?.invalid ">
+          Nombres ó Razon Social es requerido.
+    </span>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-sm">Email:<span class="validator"> *</span></span>
@@ -73,17 +94,22 @@
           <span class="validator"
           *ngIf="(Email.dirty || Email.touched) 
                       && Email.errors?.pattern">
-             El correo electrónico no tiene un formato válido
+             El correo electrónico no tiene un formato válido.
           </span>
 
       </div>
+      <span class="validator"
+          *ngIf="(Email?.dirty || Email?.touched) 
+          && Email?.invalid ">
+          El campo Email es requerido, o el formato no es válido.
+      </span>
 
       <div class="input-group mb-3">
 
         <div class="input-group-prepend">
           <label class="input-group-text" for="inputGroupSelect01">Departamento: <span class="validator"> *</span> </label>
           <select formControlName="IDDepartamento" class="custom-select" (change)="changeDepartamento()">
-
+            <option selected value="">Seleccione...</option>
             <option *ngFor="let departamento of departamentos" [ngValue]="departamento.IDDepartamento">
               {{departamento.Departamento }}
             </option>
@@ -98,7 +124,7 @@
             <label class="input-group-text" for="inputGroupSelect01">Ciudad: <span class="validator"> *</span></label>
           </div>
           <select formControlName="IDCiudad" class="custom-select">
-
+            <option selected value="">Seleccione...</option>
             <option *ngFor="let ciudad of ciudades" [ngValue]="ciudad.IDCiudad">
               {{ciudad.Ciudad}}
             </option>
@@ -124,6 +150,21 @@
         <input type="text" class="form-control" formControlName="Direccion" value="" aria-label="Small"
           aria-describedby="inputGroup-sizing-sm">
       </div>
+      <span class="validator"
+          *ngIf="(IDDepartamento?.dirty || IDDepartamento?.touched) 
+          && IDDepartamento?.invalid ">
+          El campo Departamento es requerido.
+      </span>
+      <span class="validator"
+          *ngIf="(clienteForm.get('Ciudad').get('IDCiudad')?.dirty || clienteForm.get('Ciudad').get('IDCiudad')?.touched) 
+          && clienteForm.get('Ciudad').get('IDCiudad')?.invalid ">
+          El campo Ciudad es requerido.
+      </span>
+      <span class="validator"
+          *ngIf="(Direccion?.dirty || Direccion?.touched) 
+          && Direccion?.invalid ">
+          El campo Dirección es requerido.
+      </span>
       <div class="input-group mb-2">
           <div class="input-group-prepend">
             <span class="input-group-text" id="inputGroup-sizing-sm">Teléfono:<span class="validator"> *</span></span>
@@ -137,6 +178,16 @@
             aria-describedby="inputGroup-sizing-sm">
         
       </div>
+      <span class="validator"
+          *ngIf="(Telefono?.dirty || Telefono?.touched) 
+          && Telefono?.invalid ">
+          El campo Teléfono es requerido, o tiene un formato inválido.
+      </span>
+      <span class="validator"
+          *ngIf="(Celular?.dirty || Celular?.touched) 
+          && Celular?.invalid ">
+          El campo Celular es requerido, o tiene un formato inválido.
+      </span>
       
       <div class="input-group mb-2">
         <div class="input-group-prepend">
