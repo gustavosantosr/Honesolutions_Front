@@ -31,11 +31,6 @@ export interface NavData {
 
 export const navItems2: NavData[] = [
   {
-    name: 'Clientes',
-    url: '/honesolutions/clientes',
-    icon: 'icon-puzzle'
-  },
-  {
     name: 'Prestadores',
     url: '/honesolutions/prestadoresgestor',
     icon: 'icon-puzzle'

@@ -61,27 +61,12 @@ export const navItems: NavData[] = [
             name: 'Conf. Prestadores',
             url: '/honesolutions/configprestadores',
             icon: 'icon-puzzle'
-          },
-          {
-            name: 'Seguridad',
-            icon: 'icon-puzzle',
-            children: [{
-              name: 'Roles',
-              url: '/honesolutions/roles',
-              icon: 'icon-puzzle'
-            },
-            {
-              name: 'Permisos',
-              url: '/honesolutions/permisos',
-              icon: 'icon-puzzle'
-            },
-            {
-              name: 'Usuarios',
-              url: '/honesolutions/usuarios',
-              icon: 'icon-puzzle'
-            }
-            ]
           }]
+      },
+      {
+        name: 'Reportes',
+        url: '/honesolutions/reportes',
+        icon: 'icon-puzzle'
       },
   {
     name: 'Clientes',
@@ -91,6 +76,17 @@ export const navItems: NavData[] = [
   {
     name: 'Prestadores',
     url: '/honesolutions/prestadores',
+    icon: 'icon-puzzle'
+  },
+  {
+    name: 'Tarifas P',
+    url: '/honesolutions/tarifasprestador',
+    icon: 'icon-puzzle'
+  }
+  ,
+  {
+    name: 'Upload',
+    url: '/upload',
     icon: 'icon-puzzle'
   }
 ];

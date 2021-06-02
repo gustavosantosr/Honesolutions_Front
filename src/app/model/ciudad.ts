@@ -5,4 +5,5 @@ export class Ciudad {
     Ciudad: string;
     Activo: string;
     Departamento: Departamento;
+
 }

@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
 
-    <h5 class="card-title">Listado de Documentos Requeridos </h5>
+    <h5 class="card-title">Listado de Documentos Requeridos del prestador: {{name}}  </h5>
     <button class="btn btn-outline-primary" 
             (click)="volver()">Volver</button>
   </div>
@@ -53,11 +53,16 @@
           <td mat-cell *matCellDef="let DocumentoRequerido"
             [innerHTML]="DocumentoRequerido.DocumentoTipo.DocumentoTipo | highlightSearch: filterText"></td>
         </ng-container>
+        <ng-container matColumnDef="FechaVencimiento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Vencimiento </th>
+          <td mat-cell *matCellDef="let DocumentoRequerido"
+            [innerHTML]="DocumentoRequerido.FechaVencimiento | highlightSearch: filterText"></td>
+        </ng-container>
         <ng-container matColumnDef="URLSigned">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Preview </th>
           <td mat-cell *matCellDef="let DocumentoRequerido">
             <a [href]="cleanURL(DocumentoRequerido.URLSigned)" target="_blank">
-           <!-- <embed [src]="cleanURL(DocumentoRequerido.URLSigned)" width="250px" height="300px" />-->
+            <embed [src]="cleanURL(DocumentoRequerido.URLSigned)" width="250px" height="300px" />
            Enlace Documento
            </a>
            
@@ -81,7 +86,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Cargue de documentos</h4>
+        <h4 class="modal-title">Cargue de documentos {{Documento}}</h4>
         <button type="button" class="close" (click)="maillingInvoiceModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -111,13 +116,13 @@
             <div class="form-group">
               <label>Archivo</label>
               <div>
-                <input type="file" formControlName="file" (change)="onFileSelect($event)" />
+                <input type="file" formControlName="file" (change)="onFileSelect($event)"  accept="application/pdf,image/jpeg"/>
               </div>
             </div>
             <div class="form-group" *ngIf="vencimiento_show">
               <label>Fecha Vencimiento</label>
               <div>
-                <input type="text" formControlName="FechaVencimiento" disabled/>
+                <input type="date" formControlName="FechaVencimiento"/>
               </div>
             </div>
             <button  (click)="onSubmit()" class="btn btn-outline-primary">Registrar</button>

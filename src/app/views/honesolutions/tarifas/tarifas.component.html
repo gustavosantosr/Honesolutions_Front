@@ -120,6 +120,11 @@
                     <td mat-cell *matCellDef="let Tarifa"
                         [innerHTML]="Tarifa.Servicio.Resolucion3495 | highlightSearch: filterText"></td>
                 </ng-container>
+                <ng-container matColumnDef="Descripcion3495">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                    <td mat-cell *matCellDef="let Tarifa"
+                        [innerHTML]="Tarifa.Servicio.Descripcion3495 | highlightSearch: filterText"></td>
+                </ng-container>
                 <ng-container matColumnDef="Plus">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Plus </th>
                     <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.Plus | highlightSearch: filterText"></td>
@@ -138,8 +143,13 @@
                     <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.UVR | highlightSearch: filterText"></td>
                 </ng-container>
                 <ng-container matColumnDef="Vigencia">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia </th>
-                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.Vigencia | highlightSearch: filterText">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Inicial </th>
+                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.Vigencia.VigenciaInicial | highlightSearch: filterText">
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="VigenciaFinal">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Final </th>
+                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.Vigencia.VigenciaFinal | highlightSearch: filterText">
                     </td>
                 </ng-container>
 
@@ -148,5 +158,6 @@
             </table>
 
         </div>
+        <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
     </div>
 </div>

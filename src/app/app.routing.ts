@@ -11,6 +11,7 @@ import { RegisterComponent } from './views/register/register.component';
 
 
 import { AuthGuard } from './auth.guard';
+import { UploadFilesComponent } from './views/upload-files/upload-files.component';
 export const routes: Routes = [
   {
     path: '',
@@ -34,6 +35,13 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    data: {
+      title: 'Login Page'
+    }
+  },
+  {
+    path: 'upload',
+    component: UploadFilesComponent,
     data: {
       title: 'Login Page'
     }

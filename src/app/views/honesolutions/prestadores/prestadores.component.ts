@@ -2,8 +2,8 @@ import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Prestador } from '../../../model/prestador';
 import { PrestadorService } from '../../../services/prestador.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu } from '@angular/material';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { MatPaginator, MatTableDataSource, MatCard, MatSortModule, MatSort, MatIcon, MatMenuTrigger, MatMenu, MatSnackBar } from '@angular/material';
 import { IdentificacionTipo } from '../../../model/identificacionTipo';
 import { IdentificaciontipoService } from '../../../services/identificaciontipo.service';
 import { Zonal } from '../../../model/zonal';
@@ -19,6 +19,8 @@ import { Usuario } from '../../../model/usuario';
 import { PrestadorTipo } from '../../../model/prestadorTipo';
 import { PrestadortipoService } from '../../../services/prestadortipo.service';
 import { Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 
 export class Group {
   level = 0;
@@ -29,6 +31,15 @@ export class Group {
     return !this.parent || (this.parent.visible && this.parent.expanded);
   }
 }
+const keyify = (obj, prefix = '') =>
+  Object.keys(obj).reduce((res, el) => {
+    if (Array.isArray(obj[el])) {
+      return res;
+    } else if (typeof obj[el] === 'object' && obj[el] !== null) {
+      return [...res, ...keyify(obj[el], prefix + el + '.')];
+    }
+    return [...res, prefix + el];
+  }, []);
 @Component({
   selector: 'app-prestadores',
   templateUrl: './prestadores.component.html',
@@ -40,106 +51,107 @@ export class PrestadoresComponent implements OnInit {
   public btn_update = false;
   public btn_add = true;
   columns: any[];
+  data = 2;
+  idDepartamento = 0;
   displayedColumns: string[];
-especialidades: Especialidad[];
+  especialidades: Especialidad[];
   @Input() prestador: Prestador;
-
+  IDPrestador: number;
   prestadorForm = new FormGroup({
     IDPrestador: new FormControl(''),
-    IDDepartamento: new FormControl('', [Validators.required]),
     ComiteFecha: new FormControl('', [Validators.required]),
     Ciudad: new FormGroup({ // make a nested group
-      IDCiudad: new FormControl('', [Validators.required]),
-      Ciudad: new FormControl(''),
-      Active: new FormControl(true)
+      IDCiudad: new FormControl('', [Validators.required])
     }),
-    Zonal: new FormGroup({ // make a nested group
-      IDZonal: new FormControl(''),
-      Zonal: new FormControl(''),
-      Activo: new FormControl(true)
-    }),
+    Zonal: new FormControl(''),
     IdentificacionTipo: new FormGroup({ // make a nested group
       IDIdentificacionTipo: new FormControl('', [Validators.required]),
       IdentificacionTipo: new FormControl(''),
-      Active: new FormControl(true)
+      Activo: new FormControl(true)
     }),
     Identificacion: new FormControl('', [Validators.required]),
-    DV: new FormControl('', [Validators.required]),
     Nombre: new FormControl('', [Validators.required]),
     ConsultorioDireccion: new FormControl(''),
     ConsultorioTelefono: new FormControl(''),
     Celular: new FormControl('', [Validators.required]),
     Email: new FormControl('', [Validators.required,
-           Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')]),
+    Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')]),
     Servicios: new FormControl(''),
     Tarifas: new FormControl(''),
     Expediente: new FormControl('', [Validators.required]),
     Direccion: new FormControl(''),
+    Verificado: new FormControl(true),
     PrestadorTipo: new FormGroup({ // make a nested group
       IDPrestadorTipo: new FormControl('', [Validators.required]),
-      PrestadorTipo: new FormControl(''),
-      Activo: new FormControl(true)
+      PrestadorTipo: new FormControl('')
     }),
-    PrestadorPlan: new FormGroup({ // make a nested group
-      IDPrestadorPlan: new FormControl(''),
-      PrestadorPlan: new FormControl(''),
-      Activo: new FormControl(true)
-    }),
-    Especialidad: new FormGroup({ // make a nested group
-      IDEspecialidad: new FormControl('', [Validators.required])
+    Cliente: new FormGroup({ // make a nested group
+      IDCliente: new FormControl(1)
     }),
     Usuario: new FormGroup({ // make a nested group
-      IDUsuario: new FormControl('', [Validators.required])
+      IDUsuario: new FormControl('', [Validators.required]),
+      Email: new FormControl('')
     }),
-    Activo: new FormControl(true),
-    Verificado: new FormControl(true),
+    Notificacion: new FormControl(true),
+    Error: new FormControl(''),
+    TotalDocs: new FormControl(''),
+    PendienteDocs: new FormControl(''),
+    Departamento: new FormGroup({ // make a nested group
+      IDDepartamento: new FormControl('', [Validators.required])
+    }),
+    Especialidad: new FormGroup({ // make a nested group
+      IDEspecialidad: new FormControl('', [Validators.required]),
+      Especialidad: new FormControl('')
+    }),
     CelularOtro: new FormControl(''),
-    EmailOtro: new FormControl('', [Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')])
+    EmailOtro: new FormControl('', [Validators.pattern('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')]),
+    DV: new FormControl('', [Validators.required]),
+    Activo: new FormControl(true)
   });
 
-  get IDIdentificacionTipo() {   
-    return this.prestadorForm.get('IDIdentificacionTipo');
-    }
-  get IDPrestadorTipo() {   
-    return this.prestadorForm.get('IDPrestadorTipo');
-    }
-  get IDEspecialidad() {   
-    return this.prestadorForm.get('IDEspecialidad');
-    }
-  get Expediente() {   
+  get IDIdentificacionTipo() {
+    return this.prestadorForm.get('IdentificacionTipo.IDIdentificacionTipo');
+  }
+  get IDPrestadorTipo() {
+    return this.prestadorForm.get('PrestadorTipo.IDPrestadorTipo');
+  }
+  get IDEspecialidad() {
+    return this.prestadorForm.get('Especialidad.IDEspecialidad');
+  }
+  get Expediente() {
     return this.prestadorForm.get('Expediente');
-    }
-  get IDUsuario() {   
-    return this.prestadorForm.get('IDUsuario');
-    } 
-  get Identificacion() {   
+  }
+  get IDUsuario() {
+    return this.prestadorForm.get('Usuario.IDUsuario');
+  }
+  get Identificacion() {
     return this.prestadorForm.get('Identificacion');
-    }  
-  get DV() {   
+  }
+  get DV() {
     return this.prestadorForm.get('DV');
-    }
-  get Nombre() {   
+  }
+  get Nombre() {
     return this.prestadorForm.get('Nombre');
-    }
-  get ComiteFecha() {   
+  }
+  get ComiteFecha() {
     return this.prestadorForm.get('ComiteFecha');
-    } 
-  get IDDepartamento() {   
-    return this.prestadorForm.get('IDDepartamento');
-    }  
-  get IDCiudad() {   
-    return this.prestadorForm.get('IDCiudad');
-    }
-  get Celular() {   
+  }
+  get IDDepartamento() {
+    return this.prestadorForm.get('Departamento.IDDepartamento');
+  }
+  get IDCiudad() {
+    return this.prestadorForm.get('Ciudad.IDCiudad');
+  }
+  get Celular() {
     return this.prestadorForm.get('Celular');
-    }
-  get Email() {   
+  }
+  get Email() {
     return this.prestadorForm.get('Email');
   }
-  get EmailOtro() {   
+  get EmailOtro() {
     return this.prestadorForm.get('EmailOtro');
   }
-    
+
 
 
   _alldata: any[];
@@ -177,7 +189,8 @@ especialidades: Especialidad[];
 
   }
 
-  constructor(private ciudadService: CiudadService, private departamentoService: DepartamentoService,
+  constructor(private toastr: ToastrService,
+    private spinner: NgxSpinnerService, private ciudadService: CiudadService, private departamentoService: DepartamentoService,
     private prestadorService: PrestadorService, private router: Router,
     private identificaciontipoService: IdentificaciontipoService,
     private especialidadService: EspecialidadService,
@@ -208,7 +221,20 @@ especialidades: Especialidad[];
         field: 'TelefonoContacto'
       },
       {
+        field: 'Usuario'
+
+      },
+      {
+        field: 'Completado'
+      },
+      {
         field: 'docs'
+      },
+      {
+        field: 'especialidades'
+      },
+      {
+        field: 'tarifas'
       }
 
     ];
@@ -218,6 +244,8 @@ especialidades: Especialidad[];
 
 
   ngOnInit() {
+    this.spinner.show();
+    this.IDPrestador = 1;
     this.getPrestadores();
     this.getIdentificaciontipos();
     this.getPrestadortipos();
@@ -242,7 +270,10 @@ especialidades: Especialidad[];
     return this.departamentos;
   }
   docRequeridos(row): void {
-    this.router.navigate(['honesolutions/documentorequeridos/' + row.IDPrestador]);
+    this.router.navigate(['honesolutions/documentorequeridos/' + row.IDPrestador + '/' + row.Nombre]);
+  }
+  dirEspecialidades(row): void {
+    this.router.navigate(['honesolutions/prestadorespecialidades/' + row.IDPrestador]);
   }
   getUsuarios() {
 
@@ -273,8 +304,8 @@ especialidades: Especialidad[];
     return this.prestadortipos;
   }
   changeDepartamento() {
-    const id = this.prestadorForm.controls['IDDepartamento'].value;
-    this.ciudadService.getCiudadbyDepartamento(id)
+    this.idDepartamento = this.prestadorForm.controls['Departamento'].value.IDDepartamento;
+    this.ciudadService.getCiudadbyDepartamento(this.idDepartamento)
       .subscribe(ciudades => this.ciudades = ciudades,
         err => {
           alert(err);
@@ -294,7 +325,13 @@ especialidades: Especialidad[];
   getPrestadores() {
 
     this.prestadorService.getPrestadores()
-      .subscribe(prestadores => this.dataSource.data = prestadores);
+      .subscribe(prestadores => this.dataSource.data = prestadores,
+        err => {
+          console.log(err);
+        },
+        () => {
+          this.spinner.hide();
+        });
 
 
 
@@ -313,15 +350,51 @@ especialidades: Especialidad[];
   }
   onRowClicked(row) {
     console.log('Row clicked: ', row);
+    // this.prestadorForm.controls['Departamento']['IDDepartamento'].setValue(row.Departamento.IDDepartamento);
+    // this.prestadorForm.controls['Departamento'].setValue(row.Departamento.IDDepartamento);
+   
+    this.markControlsDirty(this.prestadorForm, row);
 
-    this.prestador = row;
-    this.prestadorForm.controls['IDPrestador'].setValue(this.prestador.IDPrestador);
-    this.prestadorForm.controls['IDIdentificacionTipo'].setValue(this.prestador.IdentificacionTipo.IDIdentificacionTipo);
-    this.prestadorForm.controls['Identificacion'].setValue(this.prestador.Identificacion);
-    this.prestadorForm.controls['Email'].setValue(this.prestador.Email);
-    this.prestadorForm.controls['Direccion'].setValue(this.prestador.Direccion);
+    //this.prestadores = row;
+    //console.log(Object.keys(this.prestadorForm.controls));
+    // Object.keys(this.prestadorForm.controls).forEach(key => {
+    // this.prestadorForm.controls[key].setValue(1);
+    //});
+    //this.IDPrestador = row.IDPrestador;
+    //this.prestadorForm.setValue(row);
+    //this.changeDepartamento();
+
+
+    //this.prestadorForm.controls['Ciudad.IDCiudad'].setValue(row.Ciudad.IDCiudad);
+    //this.prestadorForm.get(['Ciudad', 'IDCiudad']).setValue(row.Ciudad.IDCiudad);
+    // this.prestador = row;
+    //  this.prestadorForm.controls['IDPrestador'].setValue(this.prestador.IDPrestador);
+    //  this.prestadorForm.controls['IDIdentificacionTipo'].setValue(this.prestador.IdentificacionTipo.IDIdentificacionTipo);
+    // this.prestadorForm.controls['Identificacion'].setValue(this.prestador.Identificacion);
+    // this.prestadorForm.controls['Email'].setValue(this.prestador.Email);
+    // this.prestadorForm.controls['Direccion'].setValue(this.prestador.Direccion);
+    this.idDepartamento = row.Departamento.IDDepartamento;
+    this.changeDepartamento();
     this.btn_add = false;
     this.btn_update = true;
+  }
+  public markControlsDirty(group: FormGroup | FormArray, values: Prestador[]): void {
+    Object.keys(group.controls).forEach((key: string) => {
+      const abstractControl = group.controls[key];
+      const valor = values[key];
+
+      if (abstractControl instanceof FormGroup || abstractControl instanceof FormArray) {
+        this.markControlsDirty(abstractControl, valor);
+      } else {
+        abstractControl.setValue(valor);
+      }
+    });
+  }
+
+  onRowClicked1(row) {
+    this.prestadorService.setPrestardorID(row.IDPrestador);
+    this.data = row.IDPrestador;
+    console.log('Row clicked: ', row);
   }
   goBack(): void {
 
@@ -337,6 +410,9 @@ especialidades: Especialidad[];
       .subscribe(() => this.cancel());
 
   }
+  mensaje() {
+    this.toastr.success('Hone Solutions!', 'El registro fue Exitoso!');
+  }
   save(): void {
     // event.preventDefault();
 
@@ -346,12 +422,14 @@ especialidades: Especialidad[];
     this.prestadorService.addPrestador(this.prestador)
       .subscribe(data => {
         if (data) {
-
+          // window.alert('El prestador se creo correctamente');
+          this.toastr.success('Hone Solutions!', 'El registro fue Exitoso!');
           this.getPrestadores();
           this.prestadorForm.reset();
         } else {
           // this.prestadorForm.reset();
-          window.alert('no se pudo ingresar el elemento');
+          this.toastr.error('Hone Solutions!', 'No se pudo registrar el elemento');
+          // window.alert('no se pudo ingresar el elemento');
         }
       }, err => {
         alert(err);
@@ -485,6 +563,20 @@ especialidades: Especialidad[];
     this.prestador = row;
     this.router.navigate(['/honesolutions/representantes/' + this.prestador.IDPrestador]);
 
+  }
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
+  public findInvalidControls() {
+    const invalid = [];
+    const controls = this.prestadorForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    alert(invalid);
+    return invalid;
   }
 
 }

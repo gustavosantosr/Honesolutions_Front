@@ -83,6 +83,9 @@ export class TarifasComponent implements OnInit {
         field: 'Resolucion3495'
       },
       {
+        field: 'Descripcion3495'
+      },
+      {
         field: 'Plus'
       },
       {
@@ -96,6 +99,9 @@ export class TarifasComponent implements OnInit {
       },
       {
         field: 'Vigencia'
+      },
+      {
+        field: 'VigenciaFinal'
       }];
     this.displayedColumns = this.columns.map(column => column.field);
 
@@ -122,17 +128,25 @@ export class TarifasComponent implements OnInit {
 
     return this.servicios;
   }
+ 
+
   getTarifas() {
 
     this.tarifaService.getTarifas()
-      .subscribe(tarifas => this.dataSource.data = tarifas);
+      .subscribe(tarifas => this.dataSource.data = tarifas,
+        err => {
+          console.log(err);
+        },
+        () => {
+          //this.spinner.hide();
+          this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+        });
 
 
 
     return this.tarifas;
   }
-
-
 
 
   select(id: number): void {

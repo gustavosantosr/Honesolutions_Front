@@ -10,6 +10,7 @@ export class Usuario {
     Contrasena: string;
     Tipo: number;
     Rol: Rol;
+    token:string;
 
 
 }

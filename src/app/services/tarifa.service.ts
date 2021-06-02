@@ -4,7 +4,7 @@ import { environment } from './../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Tarifa } from '../model/tarifa';
+import { Tarifa, TarifaPrestador, TarifaReport, TarifaServicio, TarifaVigencia } from '../model/tarifa';
 import { MessageService } from './message.service';
 
 const httpOptions = {
@@ -30,6 +30,38 @@ export class TarifaService {
         catchError(this.handleError('getTarifas', []))
       );
   }
+  /** GET tarifas from the server */
+  generateTarifas(IDTarifa: number): Observable<Tarifa[]> {
+    return this.http.get<Tarifa[]>(this.url + '/createtarifasbyidvigencia?IDTarifaVigencia=' + IDTarifa)
+      .pipe(
+        tap(_ => this.log('fetched tarifas')),
+        catchError(this.handleError('getTarifas', []))
+      );
+  }
+  /** GET tarifas from the server */
+  getTarifaVigencias(): Observable<TarifaVigencia[]> {
+    return this.http.get<TarifaVigencia[]>(this.url + '/gettarifavigencia')
+      .pipe(
+        tap(_ => this.log('fetched tarifas')),
+        catchError(this.handleError('getTarifas', []))
+      );
+  }
+  /** GET tarifas from the server */
+  getTarifasReporte(): Observable<TarifaReport[]> {
+    return this.http.get<TarifaReport[]>(this.url + '/gettarifareporte')
+      .pipe(
+        tap(_ => this.log('fetched tarifas')),
+        catchError(this.handleError('getTarifas', []))
+      );
+  }
+  /** GET tarifas from the server */
+  getTarifasbyIDPrestador(IDPrestador: number): Observable<TarifaServicio[]> {
+    return this.http.get<TarifaServicio[]>(this.url + '/gettarifaprestadorbyidprestador?IDPrestador=' + IDPrestador)
+      .pipe(
+        tap(_ => this.log('fetched tarifas')),
+        catchError(this.handleError('getTarifas', []))
+      );
+  }
 
   getTarifasFilter(term: String): Observable<Tarifa[]> {
     // tslint:disable-next-line:max-line-length
@@ -42,7 +74,7 @@ export class TarifaService {
 
   /** GET tarifa by id. Return `undefined` when id not found */
   getTarifaNo404<Data>(id: number): Observable<Tarifa> {
-    const url = `${ this.url }/?id=${id}`;
+    const url = `${this.url}/?id=${id}`;
     return this.http.get<Tarifa[]>(url)
       .pipe(
         map(tarifas => tarifas[0]), // returns a {0|1} element array
@@ -84,12 +116,27 @@ export class TarifaService {
       catchError(this.handleError<Tarifa>('addTarifa'))
     );
   }
+  /** POST: add a new tarifa to the server */
+  addTarifaVigencia(tarifa: TarifaVigencia): Observable<TarifaVigencia> {
+    return this.http.post<TarifaVigencia>(this.url + '/inserttarifavigencia', JSON.stringify(tarifa), httpOptions).pipe(
+      tap((newTarifa: TarifaVigencia) => this.log(`added tarifa w/ id=${newTarifa.IDTarifaVigencia}`)),
+      catchError(this.handleError<TarifaVigencia>('addTarifa'))
+    );
+  }
 
 
 
   /** PUT: update the tarifa on the server */
   updateTarifa(tarifa: Tarifa): Observable<any> {
-    return this.http.put( this.url + '/updatetarifa', JSON.stringify(tarifa), httpOptions
+    return this.http.put(this.url + '/updatetarifa', JSON.stringify(tarifa), httpOptions
+    ).pipe(
+      tap(_ => this.log(`updated tarifa id=${tarifa.IDTarifa}`)),
+      catchError(this.handleError<any>('updateTarifa'))
+    );
+  }
+  /** PUT: update the tarifa on the server */
+  updateTarifaPrestador(tarifa: TarifaPrestador): Observable<any> {
+    return this.http.put(this.url + '/updatetarifaprestador', JSON.stringify(tarifa), httpOptions
     ).pipe(
       tap(_ => this.log(`updated tarifa id=${tarifa.IDTarifa}`)),
       catchError(this.handleError<any>('updateTarifa'))

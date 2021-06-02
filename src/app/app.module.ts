@@ -41,6 +41,10 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { MatTableModule } from '@angular/material';
+import { ToastrModule } from 'ngx-toastr';
+import { RecaptchaFormsModule, RecaptchaModule,  RecaptchaSettings,  RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+import { UploadFilesComponent } from './views/upload-files/upload-files.component';
+import { TarifasprestadorComponent } from './views/tarifasprestador/tarifasprestador.component';
 
 
 
@@ -49,6 +53,13 @@ import { MatTableModule } from '@angular/material';
 
 @NgModule({
   imports: [
+    ToastrModule.forRoot({
+      timeOut: 20000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+    }),
+    RecaptchaModule,
+    RecaptchaFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -72,11 +83,17 @@ import { MatTableModule } from '@angular/material';
     P404Component,
     P500Component,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UploadFilesComponent,
+    TarifasprestadorComponent
   ],
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
+  },
+  {
+    provide: RECAPTCHA_SETTINGS,
+    useValue: { siteKey: '6LeSJtUaAAAAAJNGVce3W4NP-njGdCYP2BzpJIaH' } as RecaptchaSettings,
   }],
   bootstrap: [ AppComponent ]
 })

@@ -9,9 +9,10 @@ import { honesolutionsRoutingModule } from './honesolutions-routing.module';
 
 import { HttpClientModule } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
+import {MatStepperModule} from '@angular/material/stepper';
 import {
   MatInputModule,  MatProgressSpinnerModule,
-  MatSortModule, MatTableModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSnackBar, MatSnackBarModule
+  MatSortModule, MatTableModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSnackBar, MatSnackBarModule, MatNativeDateModule, MatDatepickerModule
 } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -65,6 +66,16 @@ import { ConfigprestadoresComponent } from './configprestadores/configprestadore
 import { TooltipsComponent } from '../base/tooltips.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgestor.component';
+import {DatePipe} from '@angular/common';
+import { ReportesComponent } from './reportes/reportes.component';
+import { PrestadorespecialidadesComponent } from './prestadorespecialidades/prestadorespecialidades.component';
+import { PrestadorestarifasComponent } from './prestadorestarifas/prestadorestarifas.component';
+import { TarifavigenciasComponent } from './tarifavigencias/tarifavigencias.component';
+import { WizardprestadorComponent } from './wizardprestador/wizardprestador.component';
+import { TarifaipsComponent } from './tarifaips/tarifaips.component';
+import { TarifasprestadorComponent } from './tarifasprestador/tarifasprestador.component';
+
+
 
 
 
@@ -72,6 +83,9 @@ import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgesto
 
 @NgModule({
   imports: [
+    MatStepperModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     TabsModule,
     FormsModule,
@@ -126,6 +140,7 @@ import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgesto
     PrestadorTiposComponent,
     CiudadesComponent,
     PrestadoresComponent,
+    WizardprestadorComponent,
     DocumentoRequeridosComponent,
     ServiciosComponent,
     ServicioespecialidadesComponent,
@@ -137,12 +152,19 @@ import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgesto
     ConfiglocalizacionesComponent,
     ConfigprestadoresComponent,
     TooltipsComponent,
-    PrestadoresgestorComponent
+    PrestadoresgestorComponent,
+    ReportesComponent,
+    PrestadorespecialidadesComponent,
+    PrestadorestarifasComponent,
+    TarifavigenciasComponent,
+    TarifaipsComponent,
+    TarifasprestadorComponent
 
   ],
   providers: [
     MatSnackBar,
-    HighlightSearchPipe
+    HighlightSearchPipe,
+    DatePipe
   ],
 })
 export class honesolutionsModule { }

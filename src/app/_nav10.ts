@@ -31,64 +31,8 @@ export interface NavData {
 
 export const navItems10: NavData[] = [
   {
-    name: 'Dashboard',
-    url: '/dashboard',
-    icon: 'icon-speedometer',
-    badge: {
-      variant: 'info',
-      text: 'NEW'
-    }
-  },
-  {
-    name: 'Informe',
-    url: '/proveedores/datastudio',
+    name: 'Cargar Información',
+    url: '/honesolutions/documentorequeridos/1/CABRERA ARBOLEDA SANTIAGO MAURICIO',
     icon: 'icon-puzzle'
-  },
-  {
-    name: 'Reporte',
-    url: '/proveedores/terminadodashboard',
-    icon: 'icon-puzzle'
-  },
-  {
-    name: 'Terminados',
-    url: '/icons',
-    icon: 'icon-star',
-    children: [
-      {
-        name: 'Configuración',
-        url: '/icons',
-        icon: 'icon-star',
-        children: [
-          {
-            name: 'Productos',
-            url: '/proveedores/productos',
-            icon: 'icon-speedometer'
-          },
-          {
-            name: 'Cajones',
-            url: '/proveedores/cajones',
-            icon: 'icon-puzzle'
-          }
-
-        ]
-      },
-      {
-        name: 'Salidas',
-        url: '/proveedores/salidas',
-        icon: 'icon-speedometer'
-      },
-      {
-        name: 'Terminados',
-        url: '/proveedores/terminados',
-        icon: 'icon-speedometer'
-      },
-      {
-        name: 'Asignaciones',
-        url: '/proveedores/asignaciones',
-        icon: 'icon-puzzle'
-      }
-
-    ]
   }
-
 ];

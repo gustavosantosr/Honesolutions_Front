@@ -13,7 +13,9 @@ import { TextboxQuestion } from './question-textbox';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { DatePipe } from '@angular/common';
 import { PrestadorService } from '../../../services/prestador.service';
+import { environment } from '../../../environments/environment';
 export class Group {
   level = 0;
   parent: Group;
@@ -42,16 +44,21 @@ export class SafePipe implements PipeTransform {
 })
 export class DocumentoRequeridosComponent implements OnInit {
   questions$: Observable<QuestionBase<any>[]>;
+  date = new Date((new Date().getTime() - 3888000000));
+  full = true;
   public total = 0;
   public btn_update = false;
   public vencimiento_show = true;
   public btn_add = true;
   public IDDocumento = 0;
   public IDDocumentoTipo = 0;
+  public Version = 0;
+  public Documento = "";
   columns: any[];
   displayedColumns: string[];
   elementos: any[];
-  SERVER_URL = 'http://localhost:8080/updatedocumento';
+  url = environment.base_Url1;
+  SERVER_URL = this.url + '/updatedocumento';
   @Input() documentorequerido: DocumentoRequerido;
 
   documentorequeridoForm = new FormGroup({
@@ -64,6 +71,7 @@ export class DocumentoRequeridosComponent implements OnInit {
   dataSource;
   documentorequeridos: DocumentoRequerido[];
   id_prestador: number;
+  name: string;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatMenuTrigger, { static: true }) trigger: MatMenuTrigger;
@@ -71,7 +79,7 @@ export class DocumentoRequeridosComponent implements OnInit {
   barcodeValue;
   filterText = '';
   isGestor = false;
-
+  isVencimiento = false;
 
   AfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -89,7 +97,7 @@ export class DocumentoRequeridosComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private documentorequeridoService: DocumentorequeridoService
     , private router: Router, service: QuestionService, private httpClient: HttpClient, private route: ActivatedRoute,
-    private sanitizer: DomSanitizer, private prestadorService: PrestadorService) {
+    private sanitizer: DomSanitizer, private prestadorService: PrestadorService, private datepipe: DatePipe) {
     this.questions$ = service.getQuestions();
     this.columns = [
       {
@@ -100,6 +108,9 @@ export class DocumentoRequeridosComponent implements OnInit {
       },
       {
         field: 'URLSigned'
+      },
+      {
+        field: 'FechaVencimiento'
       }];
     this.displayedColumns = this.columns.map(column => column.field);
 
@@ -108,7 +119,9 @@ export class DocumentoRequeridosComponent implements OnInit {
 
   ngOnInit() {
     this.id_prestador = +this.route.snapshot.paramMap.get('id');
-    this.dataSource = new MatTableDataSource<DocumentoRequerido | Group>(this.getDocumentorequeridos(this.id_prestador))
+    this.name = this.route.snapshot.paramMap.get('name');
+    //alert(this.name);
+    this.dataSource = new MatTableDataSource<DocumentoRequerido | Group>(this.getDocumentorequeridos(this.id_prestador));
     this.getDocumentorequeridos(this.id_prestador);
     this.uploadForm = this.formBuilder.group({ file: [''], CampoRequerido: [''], FechaVencimiento: [''] });
     if (this.prestadorService.gestor != null
@@ -127,6 +140,7 @@ export class DocumentoRequeridosComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.uploadForm.get('file').setValue(file);
+
     }
   }
 
@@ -152,6 +166,9 @@ export class DocumentoRequeridosComponent implements OnInit {
 
     this.IDDocumento = row.IDDocumento;
     this.IDDocumentoTipo = row.DocumentoTipo.IDDocumentoTipo;
+    this.Version = row.Version;
+    // alert(this.Version);
+    this.Documento = row.DocumentoTipo.DocumentoTipo;
 
     this.uploadForm.controls['FechaVencimiento'].setValue(row.FechaVencimiento);
     // alert(row.CampoRequeridoValor);
@@ -174,6 +191,7 @@ export class DocumentoRequeridosComponent implements OnInit {
 
     //alert(this.IDDocumentoTipo);
     this.vencimiento_show = false;
+    this.uploadForm.controls['FechaVencimiento'].disable();
     if (this.IDDocumentoTipo == 27 || this.IDDocumentoTipo == 29 || this.IDDocumentoTipo == 36) {
       this.onChangeNotVencDate();
       this.vencimiento_show = false;
@@ -211,6 +229,7 @@ export class DocumentoRequeridosComponent implements OnInit {
     }
     if (this.IDDocumentoTipo == 9) {
       this.vencimiento_show = true;
+      this.uploadForm.controls['FechaVencimiento'].enable();
     }
     if (this.IDDocumentoTipo == 10 || this.IDDocumentoTipo == 11) {
       this.vencimiento_show = true;
@@ -221,7 +240,14 @@ export class DocumentoRequeridosComponent implements OnInit {
     if (this.IDDocumentoTipo == 23) {
       this.vencimiento_show = true;
     }
+    if (this.IDDocumentoTipo == 32) {
+      this.vencimiento_show = true;
+      this.uploadForm.controls['FechaVencimiento'].enable();
+    }
     if (this.IDDocumentoTipo == 24 || this.IDDocumentoTipo == 25) {
+      this.vencimiento_show = true;
+    }
+    if (this.IDDocumentoTipo == 23) {
       this.vencimiento_show = true;
     }
 
@@ -281,8 +307,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear() + 1;
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -299,8 +336,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -317,8 +365,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear() + 3;
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -335,8 +394,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -353,8 +423,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -371,8 +452,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = 2;
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear() + 1;
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -390,8 +482,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -410,7 +513,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
 
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -429,8 +544,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -448,8 +574,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -467,8 +604,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -487,7 +635,19 @@ export class DocumentoRequeridosComponent implements OnInit {
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
 
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
     // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
@@ -501,8 +661,20 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = newdate.getMonth() + 1;
     let y = newdate.getFullYear();
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
+    // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
   }
@@ -514,8 +686,20 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = 4;
     let y = newdate.getFullYear() + 1;
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
+    // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
   }
@@ -528,58 +712,99 @@ export class DocumentoRequeridosComponent implements OnInit {
     let dd = newdate.getDate();
     let mm = 4;
     let y = newdate.getFullYear() + 1;
-
-    let someFormattedDate = y + '-' + mm + '-' + dd;
+    let day = "";
+    let month = "";
+    if (dd < 10) {
+      day = '0' + dd;
+    } else {
+      day = dd.toString();
+    }
+    if (mm < 10) {
+      month = '0' + mm;
+    } else {
+      month = mm.toString();
+    }
+    let someFormattedDate = y + '-' + month + '-' + day;
+    // alert(someFormattedDate);
     //document.getElementById('follow_Date').value = someFormattedDate;
     this.uploadForm.controls['FechaVencimiento'].setValue(someFormattedDate);
   }
   onChangeNotVencDate() {
-    this.uploadForm.controls['FechaVencimiento'].setValue('0000-00-00');
+    this.uploadForm.controls['FechaVencimiento'].setValue('2100-01-01');
   }
   onSubmit() {
-    const formData = new FormData();
+    let date = new Date();
+     let newdate = new Date(date);
+      let dd = newdate.getDate();
+      let mm =  newdate.getMonth() + 1;
+      let y = newdate.getFullYear();
+      let day = "";
+      let month = "";
+      if (dd < 10) {
+        day = '0' + dd;
+      } else {
+        day = dd.toString();
+      }
+      if (mm < 10) {
+        month = '0' + mm;
+      } else {
+        month = mm.toString();
+      }
+      
+      let someFormattedDate = y + '-' + month + '-' + day;
+      alert(someFormattedDate);
+    if ( this.uploadForm.controls['FechaVencimiento'].value <= someFormattedDate) {
+      alert('El documento se encuentra vencido, no se puede cargar al sistema');
+    } else {
 
-    let respuesta = [];
-    for (let k = 0; k < this.elementos.length; k++) {
-      respuesta.push({
-        label: this.elementos[k].label,
-        key: this.elementos[k].key,
-        value: this.uploadForm.get(this.elementos[k].key).value,
-        type: this.elementos[k].type,
-        required: this.elementos[k].required,
-        order: this.elementos[k].order,
-        event: this.elementos[k].event
-      });
+      
+      // alert(date);
+      const formData = new FormData();
+
+      let respuesta = [];
+      for (let k = 0; k < this.elementos.length; k++) {
+        respuesta.push({
+          label: this.elementos[k].label,
+          key: this.elementos[k].key,
+          value: this.uploadForm.get(this.elementos[k].key).value,
+          type: this.elementos[k].type,
+          required: this.elementos[k].required,
+          order: this.elementos[k].order,
+          event: this.elementos[k].event
+        });
+      }
+      //alert(this.uploadForm.get('lastname').value);
+      // alert(JSON.stringify(respuesta));
+      //alert("Se realizo el cargue de información");
+      this.uploadForm.controls['CampoRequerido'].setValue(JSON.stringify(respuesta));
+      //formData.append('file', this.uploadForm.get('profile').value);
+
+      // const formData = new FormData();
+      formData.append('media', this.uploadForm.get('file').value);
+      var metadata = {
+        'IDDocumento': this.IDDocumento,
+        'Nombre': this.Documento,
+        'FechaRegistro': someFormattedDate,
+        'CampoRequeridoValor': JSON.stringify(respuesta),
+        'Prestador': {
+          'IDPrestador': this.id_prestador
+        },
+        'DocumentoTipo': {
+          'IDDocumentoTipo': this.IDDocumentoTipo
+        },
+        'Activo': true,
+        'Validado': true,
+        'FechaVencimiento': this.uploadForm.controls['FechaVencimiento'].value,
+        'Version': this.Version
+      };
+      
+      formData.append('metadata', JSON.stringify(metadata));
+      this.httpClient.post<any>(this.SERVER_URL, formData).subscribe(
+        (res) => console.log(res),
+        (err) => console.log(err),
+        () => this.ResolveUpload()
+      );
     }
-    //alert(this.uploadForm.get('lastname').value);
-    // alert(JSON.stringify(respuesta));
-    //alert("Se realizo el cargue de información");
-    this.uploadForm.controls['CampoRequerido'].setValue(JSON.stringify(respuesta));
-    //formData.append('file', this.uploadForm.get('profile').value);
-
-    // const formData = new FormData();
-    formData.append('media', this.uploadForm.get('file').value);
-    var metadata = {
-      'IDDocumento': this.IDDocumento,
-      'Nombre': 'documento',
-      'FechaRegistro': '2020-03-03',
-      'CampoRequeridoValor': JSON.stringify(respuesta),
-      'Prestador': {
-        'IDPrestador': this.id_prestador
-      },
-      'DocumentoTipo': {
-        'IDDocumentoTipo': this.IDDocumentoTipo
-      },
-      'Activo': true,
-      'Validado': true,
-      'FechaVencimiento': this.uploadForm.controls['FechaVencimiento'].value
-    };
-    formData.append('metadata', JSON.stringify(metadata));
-    this.httpClient.post<any>(this.SERVER_URL, formData).subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err),
-      () => this.ResolveUpload()
-    );
   }
   ResolveUpload() {
     this.getDocumentorequeridos(this.id_prestador);

@@ -4,7 +4,7 @@ import { environment } from './../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { DocumentoRequerido } from '../model/documentoRequerido';
+import { DocumentoReporte, DocumentoRequerido } from '../model/documentoRequerido';
 import { MessageService } from './message.service';
 
 const httpOptions = {
@@ -25,6 +25,14 @@ export class DocumentorequeridoService {
   /** GET documentorequeridos from the server */
   getDocumentoRequeridos(): Observable<DocumentoRequerido[]> {
     return this.http.get<DocumentoRequerido[]>(this.url + '/getdocumentorequerido')
+      .pipe(
+        tap(_ => this.log('fetched documentorequeridos')),
+        catchError(this.handleError('getDocumentoRequeridos', []))
+      );
+  }
+  /** GET documentorequeridos from the server */
+  getDocumentoRequeridosReporte(): Observable<DocumentoReporte[]> {
+    return this.http.get<DocumentoReporte[]>(this.url + '/reportedocumentos')
       .pipe(
         tap(_ => this.log('fetched documentorequeridos')),
         catchError(this.handleError('getDocumentoRequeridos', []))

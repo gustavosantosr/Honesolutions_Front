@@ -115,7 +115,15 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
                     <td mat-cell *matCellDef="let Usuario">{{Usuario.Activo}}</td>
                 </ng-container>
-               
+                <ng-container matColumnDef="Activo">
+                  <th mat-header-cell *matHeaderCellDef> Realizaciôn </th>
+                  <td mat-cell *matCellDef="let Customer">
+                    <label class="switch switch-label switch-pill switch-info">
+                      <input type="checkbox" class="switch-input" [checked]="Customer.ActiveStatus">
+                      <span class="switch-slider" data-checked="On" data-unchecked="Off"></span>
+                    </label>
+                  </td>
+                </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let Usuario; columns: displayedColumns;"></tr>
             </table>

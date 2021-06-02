@@ -72,7 +72,14 @@
             <td mat-cell *matCellDef="let Prestador"
                 style="text-align: center;">{{Prestador.PendienteDocs}}</td>
           </ng-container>
-
+          <ng-container matColumnDef="Completado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Completo </th>
+            <td mat-cell *matCellDef="let Prestador">
+                <label class="switch switch-label switch-pill switch-info">
+                    <input #state type="checkbox" class="switch-input" [checked]="Prestador.Completado" (click)="completePrestador(Prestador, state.value)">
+                    <span class="switch-slider" data-checked="Si" data-unchecked="No"></span>
+                </label></td>
+        </ng-container>
           <ng-container matColumnDef="docs">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Documentos </th>
             <td mat-cell *matCellDef="let Prestador" 

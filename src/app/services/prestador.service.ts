@@ -4,7 +4,7 @@ import { environment } from './../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Prestador } from '../model/prestador';
+import { Prestador, PrestadorEspecialidad, PrestadorReport } from '../model/prestador';
 import { MessageService } from './message.service';
 
 const httpOptions = {
@@ -22,7 +22,23 @@ export class PrestadorService {
     private messageService: MessageService) { }
   url = environment.base_Url1;
   gestor: String = '';
+  IDPrestador: number;
 
+  setPrestardorID(id: number) {
+    this.IDPrestador = id;
+  }
+  getPrestardorID() {
+    return this.IDPrestador;
+  }
+    /** PUT: update the prestador on the server */
+    CompletePrestador(prestador: Prestador): Observable<any> {
+      return this.http.put(this.url + '/completeprestador', JSON.stringify(prestador), httpOptions
+      ).pipe(
+        tap(_ => this.log(`updated prestador id=${prestador.IDPrestador}`)),
+        catchError(this.handleError<any>('updatePrestador'))
+      );
+    }
+ 
   /** GET prestadores from the server */
   getPrestadores(): Observable<Prestador[]> {
     this.gestor = 'No gestor';
@@ -32,11 +48,29 @@ export class PrestadorService {
         catchError(this.handleError('getPrestadores', []))
       );
   }
+  /** GET prestadoresreport from the server */
+  getPrestadoresReport(): Observable<PrestadorReport[]> {
+    this.gestor = 'No gestor';
+    return this.http.get<PrestadorReport[]>(this.url + '/getprestadorreport')
+      .pipe(
+        tap(_ => this.log('fetched prestadores')),
+        catchError(this.handleError('getPrestadorReportes', []))
+      );
+  }
 
-   /** GET prestadoresGestor from the server */
-   getPrestadoresGestor(idGestor: number): Observable<Prestador[]> {
-     this.gestor = 'gestor';
+  /** GET prestadoresGestor from the server */
+  getPrestadoresGestor(idGestor: number): Observable<Prestador[]> {
+    this.gestor = 'gestor';
     return this.http.get<Prestador[]>(this.url + '/getprestadorbyidgestor?IDGestor=' + idGestor + '')
+      .pipe(
+        tap(_ => this.log('fetched prestadores para gestor')),
+        catchError(this.handleError('getPrestadoresGestor', []))
+      );
+  }
+  /** GET prestadoresGestor from the server */
+  getEspecialidadbyIDPrestador(idprestador: number): Observable<PrestadorEspecialidad[]> {
+    this.gestor = 'gestor';
+    return this.http.get<PrestadorEspecialidad[]>(this.url + '/getprestadorespecialidadbyid?IDPrestador=' + idprestador + '')
       .pipe(
         tap(_ => this.log('fetched prestadores para gestor')),
         catchError(this.handleError('getPrestadoresGestor', []))
@@ -55,7 +89,7 @@ export class PrestadorService {
 
   /** GET prestador by id. Return `undefined` when id not found */
   getPrestadorNo404<Data>(id: number): Observable<Prestador> {
-    const url = `${ this.url }/?id=${id}`;
+    const url = `${this.url}/?id=${id}`;
     return this.http.get<Prestador[]>(url)
       .pipe(
         map(prestadores => prestadores[0]), // returns a {0|1} element array
@@ -102,7 +136,7 @@ export class PrestadorService {
 
   /** PUT: update the prestador on the server */
   updatePrestador(prestador: Prestador): Observable<any> {
-    return this.http.put( this.url + '/updateprestador', JSON.stringify(prestador), httpOptions
+    return this.http.put(this.url + '/updateprestador', JSON.stringify(prestador), httpOptions
     ).pipe(
       tap(_ => this.log(`updated prestador id=${prestador.IDPrestador}`)),
       catchError(this.handleError<any>('updatePrestador'))

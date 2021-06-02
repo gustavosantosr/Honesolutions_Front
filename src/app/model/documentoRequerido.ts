@@ -10,4 +10,14 @@ export class DocumentoRequerido {
     PrestadorTipo: PrestadorTipo;
     DocumentoTipo: DocumentoTipo;
     URLSigned: string;
+    Version: number;
+}
+export class DocumentoReporte {
+    FechaRegistro: number;
+    Validado: boolean;
+    FechaVencimiento: string;
+    ComiteFecha: string;
+    Identificacion: string;
+    DocumentoTipo: string;
+    URL: string;
 }

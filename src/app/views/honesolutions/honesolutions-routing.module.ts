@@ -33,6 +33,14 @@ import { IdentificaciontiposComponent } from './identificaciontipos/identificaci
 import { ConfiglocalizacionesComponent } from './configlocalizaciones/configlocalizaciones.component';
 import { ConfigprestadoresComponent } from './configprestadores/configprestadores.component';
 import { PrestadoresgestorComponent } from './prestadoresgestor/prestadoresgestor.component';
+import { ReportesComponent } from './reportes/reportes.component';
+import { PrestadorespecialidadesComponent } from './prestadorespecialidades/prestadorespecialidades.component';
+import { PrestadorestarifasComponent } from './prestadorestarifas/prestadorestarifas.component';
+import { WizardprestadorComponent } from './wizardprestador/wizardprestador.component';
+import { TarifaipsComponent } from './tarifaips/tarifaips.component';
+import { TarifasprestadorComponent } from './tarifasprestador/tarifasprestador.component';
+
+
 
 
 
@@ -55,7 +63,7 @@ const routes: Routes = [
   { path: 'prestadortipos', component: PrestadorTiposComponent },
   { path: 'identificaciontipos', component: IdentificaciontiposComponent },
   { path: 'prestadores', component: PrestadoresComponent },
-  { path: 'documentorequeridos/:id', component: DocumentoRequeridosComponent },
+  { path: 'documentorequeridos/:id/:name', component: DocumentoRequeridosComponent },
   { path: 'dynamic-form', component: DynamicFormComponent },
   { path: 'servicios', component: ServiciosComponent },
   { path: 'especialidades', component: EspecialidadesComponent },
@@ -72,7 +80,13 @@ const routes: Routes = [
   { path: 'informes', component: InformesComponent },
   { path: 'configlocalizaciones', component: ConfiglocalizacionesComponent },
   { path: 'configprestadores', component: ConfigprestadoresComponent },
-  { path: 'prestadoresgestor', component: PrestadoresgestorComponent}
+  { path: 'prestadoresgestor', component: PrestadoresgestorComponent},
+  { path: 'prestadorespecialidades/:id', component: PrestadorespecialidadesComponent},
+  { path: 'prestadorestarifas/:id', component: PrestadorestarifasComponent},
+  { path: 'reportes', component: ReportesComponent},
+  { path: 'wizard', component: WizardprestadorComponent},
+  { path: 'tarifasips', component: TarifaipsComponent},
+  { path: 'tarifasprestador', component: TarifasprestadorComponent}
 ];
 
 @NgModule({

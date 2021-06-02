@@ -30,6 +30,9 @@ export class AuthService {
   get isLoggedIn() {
     return this.LoggedInStatus;
   }
+  get CurrentUser() {
+    return this.usuario;
+  }
 
 
   getUsersDetails(usuario: Usuario) {

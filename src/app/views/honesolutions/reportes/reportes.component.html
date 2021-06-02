@@ -1,0 +1,21 @@
+<div class="card">
+    <div class="card-header">
+    <h5 class="card-title">Reportes</h5>
+    <button class="btn btn-outline-primary" (click)="getDocumentos()">Documentos</button>
+    <button class="btn btn-outline-primary" (click)="getTarifas()">Tarifas</button>
+  </div>
+  <div class="card-body">
+    
+  
+    <wbr-pivot #pivot [toolbar]="true"
+[width]="'100%'"
+[height]="700"
+[customizeCell]="onCustomizeCell"
+(ready)="onPivotReady($event)"
+(reportcomplete)="onReportComplete()"
+>
+
+</wbr-pivot>
+  </div>
+</div>
+

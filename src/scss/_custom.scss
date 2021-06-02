@@ -19,3 +19,21 @@
  .hightlight{
     background-color: yellow;
  } 
+ #toast-container > .toast-success {
+   
+    background-color: #45a7bc;
+    color: rgb(242, 246, 248);
+}
+#toast-container > .toast-error {
+   
+    background-color: red;
+    color: #e9e9e9;
+}
+ /* this will set the toastr icon */
+ #toast-container > .toast-custom {
+    content: "\f00C";
+}
+/* this will set the toastr style */
+.toast-custom {
+    background-color: purple;
+}

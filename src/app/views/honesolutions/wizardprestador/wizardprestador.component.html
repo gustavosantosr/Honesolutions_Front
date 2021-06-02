@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+
+        <h5 class="card-title">Listado de Documentos Requeridos del prestador: {{name}} </h5>
+        <button class="btn btn-outline-primary" (click)="volver()">Volver</button>
+    </div>
+
+    <div class="card-body">
+
+        <mat-vertical-stepper [linear]="isLinear" #stepper>
+            <div *ngFor="let documento of documentorequeridos; let myIndex=index;">
+                <form [formGroup]="uploadForm">
+                <div 
+                    *ngFor="let elemento of crearCampos(documento.CampoRequeridoValor);">
+
+                    <label for="nickname">{{elemento.label}}</label>
+                    <input type="{{elemento.type}}" class="form-control" value="{{elemento.value}}"
+                        (change)="onChangeDate($event)" formControlName="{{elemento.key}}" id="codigo"
+                        placeholder="{{elemento.label}}" name="codigo" style="width:200px;">
+                </div>
+            </form>
+                <mat-step [stepControl]="documento.DocumentoTipo.DocumentoTipo">
+                    <form [formGroup]="firstFormGroup">
+                        <ng-template matStepLabel>{{documento.DocumentoTipo.DocumentoTipo}}</ng-template>
+                        <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+                        </mat-form-field>
+
+                        <div>
+                            <button mat-button matStepperNext>Next</button>
+                            <button mat-button matStepperPrevious>Back</button>
+                        </div>
+                    </form>
+                </mat-step>
+            </div>
+
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                <p>You are now done.</p>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+</div>

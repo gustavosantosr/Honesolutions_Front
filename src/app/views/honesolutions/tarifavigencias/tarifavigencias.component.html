@@ -1,0 +1,136 @@
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Agregar Tarifas</h5>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="tarifaForm">
+            <div class="input-group mb-3" hidden>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Id Tarifa:</span>
+                </div>
+                <input type="number" class="form-control" formControlName="IDTarifa" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Fecha Inicial:</span>
+                </div>
+                <input type="date" class="form-control" formControlName="VigenciaInicial" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Fecha Final:</span>
+                </div>
+                <input type="date" class="form-control" formControlName="VigenciaFinal" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+               
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Porcentaje:</span>
+                </div>
+                <input type="number" class="form-control" formControlName="Porcentage" value="" aria-label="Small"
+                    aria-describedby="inputGroup-sizing-sm">
+                
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Vigencia Base:</span>
+                    </div>
+                    <input type="number" class="form-control" formControlName="ParentTV" value="" aria-label="Small"
+                        aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+
+
+            <button *ngIf="btn_add" class="btn btn-outline-primary" [disabled]="!tarifaForm.valid"
+                (click)="save()">Add</button>
+            <button *ngIf="btn_update" class="btn btn-outline-primary" [disabled]="!tarifaForm.valid"
+                (click)="update()">Actualizar</button>
+            <button class="btn btn-outline-primary" (click)="cancel()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-header">
+
+        <h5 class="card-title">Lista Tarifas </h5>
+
+    </div>
+    <div class="card-body">
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Filtro</span>
+            </div>
+            <input matInput (keyup)="applyFilter($event.target.value)" type="text" class="form-control"
+                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+
+
+        <div class="table-responsive-sm">
+
+            <table class="table table-borderless " mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" 
+            <ng-container matColumnDef="editar">
+                <th mat-header-cell *matHeaderCellDef> Edit </th>
+                <td mat-cell *matCellDef="let Tarifa" id="ee" (click)="onRowClicked(Tarifa)"> <img src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+              </ng-container>-->
+                <!-- Position Column 
+      <ng-container matColumnDef="salida">
+        <th mat-header-cell *matHeaderCellDef> Salida. </th>
+        <td mat-cell *matCellDef="let Tarifa" id="ee" (click)="salida(Tarifa)"> <img src="../../../../assets/editar.png" ng-click="salida(1)"> </td>
+      </ng-container>-->
+                <ng-container matColumnDef="editar">
+                    <th mat-header-cell *matHeaderCellDef> Edit </th>
+                    <td mat-cell *matCellDef="let Tarifa" id="ee" (click)="onRowClicked(Tarifa)"> <img
+                            src="../../../../assets/editar.png" ng-click="select(1)"> </td>
+                </ng-container>
+                <!-- Position Column -->
+                <ng-container matColumnDef="IDTarifaVigencia">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                    <td mat-cell *matCellDef="let Tarifa">{{Tarifa.IDTarifaVigencia}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="VigenciaInicial">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha inicial </th>
+                    <td mat-cell *matCellDef="let Tarifa"
+                        [innerHTML]="Tarifa.VigenciaInicial | highlightSearch: filterText"></td>
+                </ng-container>
+                <ng-container matColumnDef="VigenciaFinal">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Final </th>
+                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.VigenciaFinal | highlightSearch: filterText"></td>
+                </ng-container>
+                <ng-container matColumnDef="Porcentage">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentage </th>
+                    <td mat-cell *matCellDef="let Tarifa"
+                        [innerHTML]="Tarifa.Porcentage | highlightSearch: filterText"></td>
+                </ng-container>
+                <ng-container matColumnDef="Activo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo </th>
+                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.Activo | highlightSearch: filterText"></td>
+                </ng-container>
+                <ng-container matColumnDef="ParentTV">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ParentTV </th>
+                    <td mat-cell *matCellDef="let Tarifa" [innerHTML]="Tarifa.ParentTV | highlightSearch: filterText"></td>
+                </ng-container>
+                <ng-container matColumnDef="Crear">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Crear Tarifas </th>
+                    <td mat-cell *matCellDef="let Tarifa"><button
+                        (click)="createTarifa(Tarifa)" class="btn btn-outline-primary">Crear Tarifas</button></td>
+                </ng-container>
+                <ng-container matColumnDef="Replicar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Replicar Tarifas a Prestadores </th>
+                    <td mat-cell *matCellDef="let Tarifa"><button
+                         class="btn btn-outline-primary">Replicar</button></td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let Tarifa; columns: displayedColumns;"></tr>
+            </table>
+
+        </div>
+    </div>
+</div>
